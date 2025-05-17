@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ListMe - Simplificando Vendas</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/index.css">
+</head>
+<body>
+<header>
+  <a href="#" class="logo">ListMe</a>
+</header>
+
+<div class="nav-dots">
+  <div class="nav-dot active" data-section="0"></div>
+  <div class="nav-dot" data-section="1"></div>
+  <div class="nav-dot" data-section="2"></div>
+</div>
+
+<div class="fullpage">
+  <!-- Hero Section -->
+  <section id="hero" class="section active">
+    <div class="section-content">
+      <div class="hero-text">
+        <h1>Automatize seus pedidos. Maximize seus resultados.</h1>
+        <p>Transforme o processo manual de anotação de pedidos em um fluxo digital inteligente. Aumente sua produtividade, reduza erros e impulsione suas vendas.</p>
+        <button class="cta-button" onclick="openModal()">Download em Breve</button>
+      </div>
+      <div class="hero-image">
+        <div class="slideshow">
+          <div class="slide fade">
+            <img src="./assets/imgs/tela1.jpg" alt="ListMe Tela 1">
+          </div>
+          <div class="slide fade">
+            <img src="./assets/imgs/tela2.jpg" alt="ListMe Tela 2">
+          </div>
+          <div class="slide fade">
+            <img src="./assets/imgs/tela3.jpg" alt="ListMe Tela 3">
+          </div>
+
+          <!-- Botões de navegação -->
+          <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+          <a class="next" onclick="changeSlide(1)">&#10095;</a>
+
+          <!-- Indicadores -->
+          <div class="slide-dots">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="section">
+    <div class="section-content">
+      <div class="features-grid">
+        <div class="feature-card">
+          <i class="fas fa-mobile-alt"></i>
+          <h3>Catálogo Digital</h3>
+          <p>Cadastre e organize seus produtos de forma rápida e prática, com acesso instantâneo às informações.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-calculator"></i>
+          <h3>Cálculos Automáticos</h3>
+          <p>Precificação automática e gestão simplificada dos pedidos, eliminando erros de cálculo.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-file-export"></i>
+          <h3>Exportação Flexível</h3>
+          <p>Exporte seus pedidos em PDF e PNG, mantendo o controle total sobre suas vendas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section id="stats" class="section">
+    <div class="section-content">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <h3>100%</h3>
+          <p>Digital</p>
+        </div>
+        <div class="stat-item">
+          <h3>0%</h3>
+          <p>Margem de Erro</p>
+        </div>
+        <div class="stat-item">
+          <h3>24/7</h3>
+          <p>Disponibilidade</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+
+<script src="./assets/js/index.js"></script>
+</body>
+</html>
