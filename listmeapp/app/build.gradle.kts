@@ -82,6 +82,11 @@ dependencies {
 
     // DataStore para armazenamento de preferências
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.material)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     // Testes
     testImplementation(libs.junit)
