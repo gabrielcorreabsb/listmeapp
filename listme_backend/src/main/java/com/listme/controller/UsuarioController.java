@@ -1,5 +1,8 @@
 package com.listme.controller;
 import com.listme.dto.LoginRequest;
+import com.listme.dto.MessageResponse;
+import com.listme.dto.UserDTO;
+import com.listme.dto.UsuarioUpdateDTO;
 import com.listme.model.Usuario;
 import com.listme.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -44,15 +47,16 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editarUsuario(@PathVariable Integer id, @Valid @RequestBody Usuario usuario) {
+    public ResponseEntity<?> editarUsuario(@PathVariable Integer id,
+                                           @Valid @RequestBody UsuarioUpdateDTO usuarioUpdateDTO) { // Mude para UsuarioUpdateDTO
         try {
-            usuario.setIdUsuario(id);
-            Usuario usuarioAtualizado = usuarioService.editarUsuario(usuario);
-            return ResponseEntity.ok(usuarioAtualizado);
+            Usuario usuarioAtualizado = usuarioService.editarUsuario(id, usuarioUpdateDTO); // Passe o DTO para o serviço
+            // Retorne um UserDTO para consistência com outras respostas, se desejar
+            return ResponseEntity.ok(new UserDTO(usuarioAtualizado));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new MessageResponse(e.getMessage())); // Envie MessageResponse
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Erro ao atualizar usuário");
+            return ResponseEntity.internalServerError().body(new MessageResponse("Erro ao atualizar usuário")); // Envie MessageResponse
         }
     }
 
