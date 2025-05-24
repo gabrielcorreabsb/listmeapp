@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -18,16 +19,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+import android.widget.ImageButton // Importar ImageButton
+
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var btnLogout: Button // Variável para o botão
+    // Remova ou mantenha btnLogout dependendo se ainda existe no layout
+    // private lateinit var btnLogout: Button
+    private lateinit var ibLogout: ImageButton // Novo ImageButton para o logout na sidebar
+    private lateinit var ibUser: ImageButton // Botão para admin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main) // Seu layout com o botão de logout
+        setContentView(R.layout.activity_main)
 
-        // A lógica de insets continua a mesma
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -35,63 +40,74 @@ class MainActivity : AppCompatActivity() {
         }
 
         // --- LÓGICA DO BOTÃO DE LOGOUT ---
-        btnLogout = findViewById(R.id.btnLogout) // Encontra o botão no layout
-
-        btnLogout.setOnClickListener {
-            performLogout()
+        ibLogout = findViewById(R.id.ibLogout) // Encontra o ImageButton de logout
+        ibUser = findViewById(R.id.ibUser)
+        ibLogout.setOnClickListener {
+            performLogout() // A função performLogout() que você já tem
         }
         // --- FIM DA LÓGICA DO BOTÃO DE LOGOUT ---
+
+
+        // Verificar o cargo do usuário e mostrar/ocultar o botão de admin
+        val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
+        val userCargo = sharedPreferences.getString("USER_CARGO", null)
+
+        if (userCargo == "ADMIN") { // Certifique-se que "ADMIN" corresponde ao valor salvo
+            ibUser.visibility = View.VISIBLE
+            ibUser.setOnClickListener {
+                val intent = Intent(this, UserListActivity::class.java)
+                startActivity(intent)
+            }
+        } else {
+            ibUser.visibility = View.GONE
+        }
     }
 
+    // A função performLogout() e redirectToLogin() permanecem as mesmas
     private fun performLogout() {
         Log.d("MainActivity", "Logout button clicked")
-
-        // --- Parte 1: Limpar o token local ---
-        val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE) // Use o mesmo nome de SharedPreferences
+        val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("AUTH_TOKEN", null)
 
+        // Limpar SharedPreferences COMPLETAMENTE ao fazer logout
         with(sharedPreferences.edit()) {
-            remove("AUTH_TOKEN")
+            clear() // Remove todos os dados (token, cargo, etc.)
             apply()
         }
-        Log.i("Auth", "Token removido das SharedPreferences.")
+        Log.i("Auth", "SharedPreferences limpas.")
 
-        // --- Parte 2: Chamar o endpoint do backend (Opcional, mas recomendado) ---
+        // Opcional: Chamar API de logout do backend
         if (token != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val bearerToken = "Bearer $token"
-                    val response = RetrofitClient.instance.logout(bearerToken)
-
+                    // Supondo que o método logout está em authInstance ou userInstance
+                    val response = RetrofitClient.instance.logout(bearerToken) // Ajuste se necessário
                     withContext(Dispatchers.Main) {
                         if (response.isSuccessful) {
-                            Log.d("LogoutAPI", "Logout no backend bem-sucedido: ${response.body()?.message}")
-                            Toast.makeText(this@MainActivity, response.body()?.message ?: "Logout realizado (servidor)", Toast.LENGTH_SHORT).show()
+                            Log.d("LogoutAPI", "Logout no backend bem-sucedido.")
                         } else {
-                            Log.e("LogoutAPI", "Falha no logout do backend: ${response.code()} - ${response.errorBody()?.string()}")
-                            Toast.makeText(this@MainActivity, "Falha ao registrar logout no servidor", Toast.LENGTH_SHORT).show()
+                            Log.e("LogoutAPI", "Falha no logout do backend: ${response.code()}")
                         }
-                        redirectToLogin()
+                        redirectToLogin() // Redireciona independentemente do resultado da API
                     }
                 } catch (e: Exception) {
                     Log.e("LogoutAPI", "Exceção ao chamar API de logout: ${e.message}", e)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@MainActivity, "Erro de rede no logout", Toast.LENGTH_SHORT).show()
                         redirectToLogin()
                     }
                 }
             }
         } else {
-            Log.w("Logout", "Nenhum token local encontrado para logout no backend.")
             redirectToLogin()
         }
     }
 
     private fun redirectToLogin() {
-        // Certifique-se de que o import da LoginActivity está correto no topo do arquivo
-        val intent = Intent(this@MainActivity, LoginActivity::class.java)
+        // Precisa importar LoginActivity
+        val intent = Intent(this@MainActivity, com.example.listmeapp.auth.ui.LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
-        finish() // Finaliza MainActivity
+        finish()
     }
 }

@@ -28,4 +28,12 @@ object RetrofitClient {
             .build()
         retrofit.create(AuthApi::class.java)
     }
+   val userInstance: UserApi by lazy {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create()) // Adicione TypeAdapters para LocalDateTime se necessário
+            .build()
+        retrofit.create(UserApi::class.java)
+    }
 }

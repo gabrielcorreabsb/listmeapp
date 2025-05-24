@@ -28,7 +28,12 @@ android:name=".auth.ui.MainActivity"
 
     </activity>
 
-    <!-- Se você tiver outras Activities, declare-as aqui também -->
+        <activity
+            android:name=".auth.ui.UserListActivity"
+            android:exported="false" />
+
+
+        <!-- Se você tiver outras Activities, declare-as aqui também -->
     <!-- Exemplo:
     <activity
         android:name=".algumaoutra.OutraActivity"

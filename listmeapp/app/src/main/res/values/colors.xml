@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Cores Primárias do App (baseado no design) -->
+    <color name="primaryColor">#008080</color> <!-- Um tom de Teal/Azul-esverdeado para a barra lateral e topo -->
+    <color name="primaryDarkColor">#006060</color> <!-- Uma variação mais escura, se necessário -->
+    <color name="primaryLightColor">#4cb0af</color> <!-- Uma variação mais clara, se necessário -->
+    <color name="onPrimaryColor">#FFFFFF</color> <!-- Cor do texto/ícones sobre a cor primária (branco) -->
+
+    <!-- Cores de Fundo e Superfície -->
+    <color name="backgroundColor">#F0F2F5</color> <!-- Cinza claro para o fundo principal -->
+    <color name="surfaceColor">#FFFFFF</color> <!-- Branco para cards, campos de texto -->
+    <color name="surfaceVariantColor">#E8E8E8</color> <!-- Cinza um pouco mais escuro para cards de notificação -->
+
+
+    <!-- Cores de Texto -->
+    <color name="textColorPrimary">#212121</color> <!-- Preto/Cinza escuro para texto principal -->
+    <color name="textColorSecondary">#757575</color> <!-- Cinza para texto secundário -->
+
+    <!-- Cores Padrão (podem ser removidas ou ajustadas) -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

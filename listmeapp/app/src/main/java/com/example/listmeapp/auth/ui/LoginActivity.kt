@@ -101,7 +101,9 @@ class LoginActivity : AppCompatActivity() {
                             Log.d("LOGIN_SUCCESS", "Token: ${loginResponseData.token}")
                             Log.d("LOGIN_SUCCESS", "User: ${loginResponseData.user}")
 
-                            saveToken(loginResponseData.token)
+                            // Salvar o token E O CARGO
+                            saveAuthInfo(loginResponseData.token, loginResponseData.user.cargo) // Passa o cargo
+
                             navigateToMainScreen()
 
                         } else {
@@ -156,5 +158,15 @@ class LoginActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+    }
+
+    private fun saveAuthInfo(token: String, cargo: String) { // Recebe o cargo como String
+        val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putString("AUTH_TOKEN", token)
+            putString("USER_CARGO", cargo) // Salva o cargo como String
+            apply()
+        }
+        Log.i("Auth", "Token e Cargo salvos nas SharedPreferences.")
     }
 }
