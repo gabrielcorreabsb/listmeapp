@@ -83,6 +83,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/usuarios/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/usuarios/**").hasRole("ADMIN")
 
+                        // Orçamentos
+
+                        .requestMatchers(HttpMethod.POST, "/api/orcamentos/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers(HttpMethod.GET, "/api/orcamentos/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers(HttpMethod.PUT, "/api/orcamentos/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers(HttpMethod.DELETE, "/api/orcamentos/**").hasRole("ADMIN")
+
                         // Recursos estáticos
                         .requestMatchers(
                                 "/",
