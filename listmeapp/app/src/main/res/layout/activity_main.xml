@@ -10,6 +10,7 @@
     tools:context=".auth.ui.MainActivity">
 
     <!-- Barra Lateral de Navegação -->
+
     <LinearLayout
         android:id="@+id/sidebar"
         android:layout_width="72dp"
@@ -21,6 +22,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:id="@+id/ibHome"
+            style="@style/SidebarIcon"
+            android:contentDescription="Home"
+            android:src="@drawable/ic_home" />
 
         <ImageButton
             android:id="@+id/ibMenu"
@@ -38,21 +45,28 @@
             android:id="@+id/ibUser"
             style="@style/SidebarIcon"
             android:src="@drawable/ic_person"
-            android:contentDescription="Cadastrar Funcionário"
+            android:contentDescription="Gerenciar Funcionários"
             android:visibility="gone"
             tools:visibility="visible"/>
 
         <ImageButton
-            android:id="@+id/ibAdd"
+            android:id="@+id/ibProduct"
             style="@style/SidebarIcon"
-            android:src="@drawable/ic_add"
-            android:contentDescription="Adicionar"/>
+            android:contentDescription="Gerenciar Estoque"
+            android:src="@drawable/ic_product" />
 
         <ImageButton
-            android:id="@+id/ibHome"
+            android:id="@+id/ibClient"
             style="@style/SidebarIcon"
-            android:src="@drawable/ic_home"
-            android:contentDescription="Home"/>
+            android:contentDescription="Gerenciar Clientes"
+            android:src="@drawable/ic_client" />
+
+        <ImageButton
+            android:id="@+id/ibOrcamento"
+            style="@style/SidebarIcon"
+            android:contentDescription="Gerar Orçamentos"
+            android:src="@drawable/ic_file" />
+
 
         <ImageButton
             android:id="@+id/ibNotifications"
@@ -60,23 +74,14 @@
             android:src="@drawable/ic_notifications"
             android:contentDescription="Notificações"/>
 
-        <ImageButton
-            android:id="@+id/ibDownload"
-            style="@style/SidebarIcon"
-            android:src="@drawable/ic_download"
-            android:contentDescription="Download"/>
+        <!-- Espaçador para empurrar logout e settings para baixo -->
 
-        <ImageButton
-            android:id="@+id/ibFile"
-            style="@style/SidebarIcon"
-            android:src="@drawable/ic_file"
-            android:contentDescription="Arquivo"/>
+
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/> <!-- Espaçador para empurrar logout e settings para baixo -->
-
+            android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/ibLogout"
@@ -139,10 +144,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Conteúdo Principal (Ex: Notificações)"
-            android:textSize="24sp"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"/>
+            android:layout_marginTop="50dp"
+            android:text="Conteúdo Principal (Ex: Notificações)"
+            android:textSize="24sp" />
 
     </LinearLayout>
 

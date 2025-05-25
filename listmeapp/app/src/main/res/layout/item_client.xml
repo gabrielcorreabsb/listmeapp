@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvClientName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="Nome do Cliente"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnEditClient"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView
+            android:id="@+id/tvClientIdentifier"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            android:textSize="14sp"
+            tools:text="CNPJ/CPF: XX.XXX.XXX/XXXX-XX"
+            app:layout_constraintTop_toBottomOf="@id/tvClientName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tvClientName"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/tvClientPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="Telefone: (XX) XXXXX-XXXX"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/tvClientIdentifier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tvClientName"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tvClientEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="Email: cliente@example.com"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/tvClientPhone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tvClientName"
+            android:layout_marginTop="2dp"/>
+
+        <ImageButton
+            android:id="@+id/btnEditClient"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_edit"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="?attr/colorControlNormal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnDeleteClient"
+            android:contentDescription="Editar Cliente"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginEnd="8dp"/>
+
+        <ImageButton
+            android:id="@+id/btnDeleteClient"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@android:color/holo_red_dark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="Deletar Cliente"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

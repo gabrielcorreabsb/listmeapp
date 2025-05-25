@@ -1,21 +1,26 @@
-package com.example.listmeapp.auth.ui
+package com.example.listmeapp.auth.ui // Ou o pacote correto da sua Activity
 
 import android.content.Context
-import android.content.Intent
+// import android.content.Intent // Não usado diretamente nesta Activity se RegisterActivity foi removida
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns // Para validação de Email
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ProgressBar
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.example.listmeapp.R
-import com.example.listmeapp.data.api.UserApi
 import com.example.listmeapp.data.api.RetrofitClient
-import com.example.listmeapp.data.model.*
-import com.example.listmeapp.auth.ui.UserListAdapter
+import com.example.listmeapp.data.model.* // Importar Cargo, UsuarioCreateRequest, UsuarioUpdateRequest, UsuarioResponse, MessageResponse
+// import com.example.listmeapp.auth.ui.UserListAdapter // Se UserListAdapter estiver neste pacote
+import com.example.listmeapp.auth.ui.UserListAdapter // Exemplo se estiver em ui.adapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
@@ -24,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 
 class UserListActivity : AppCompatActivity() {
 
@@ -35,7 +41,7 @@ class UserListActivity : AppCompatActivity() {
     private lateinit var fabAddUser: FloatingActionButton
     private var authToken: String? = null
 
-    private val cargoValues = Cargo.values() // Enum Cargo do seu modelo
+    private val cargoValues = Cargo.values()
     private val cargoDisplayNames = cargoValues.map { it.name.replace("_", " ").capitalizeWords() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +60,8 @@ class UserListActivity : AppCompatActivity() {
 
         val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
         authToken = sharedPreferences.getString("AUTH_TOKEN", null)
+        // A visibilidade do FAB e das opções de edição/deleção já são controladas
+        // pelo fato de que apenas Admins chegam a esta tela.
 
         if (authToken == null) {
             Toast.makeText(this, "Erro de autenticação. Faça login como admin.", Toast.LENGTH_LONG).show()
@@ -62,14 +70,13 @@ class UserListActivity : AppCompatActivity() {
         }
 
         fabAddUser.setOnClickListener {
-            showUserFormDialog(null) // null para indicar que é um novo usuário
+            showUserFormDialog(null)
         }
 
         setupRecyclerView()
         fetchUsers()
     }
 
-    // Helper para capitalizar palavras
     private fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.lowercase().replaceFirstChar(Char::titlecase) }
 
     private fun setupRecyclerView() {
@@ -80,6 +87,8 @@ class UserListActivity : AppCompatActivity() {
             onDeleteClick = { user ->
                 showDeleteConfirmationDialog(user)
             }
+            // isAdmin não é mais necessário passar para o adapter se esta tela SÓ é acessada por admin
+            // e todas as ações são permitidas para admin.
         )
         rvUsers.adapter = userListAdapter
     }
@@ -92,7 +101,7 @@ class UserListActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val bearerToken = "Bearer $authToken"
-                val response = RetrofitClient.userInstance.getUsers(bearerToken)
+                val response = RetrofitClient.userInstance.getUsers(bearerToken) // Corrigido
                 withContext(Dispatchers.Main) {
                     pbUserList.visibility = View.GONE
                     if (response.isSuccessful) {
@@ -107,6 +116,7 @@ class UserListActivity : AppCompatActivity() {
                         }
                     } else {
                         tvNoUsers.visibility = View.VISIBLE
+                        Log.e("FetchUsersError", "Código: ${response.code()}, Mensagem: ${response.errorBody()?.string()}")
                         Toast.makeText(this@UserListActivity, "Erro ao buscar usuários: ${response.code()}", Toast.LENGTH_LONG).show()
                     }
                 }
@@ -114,6 +124,7 @@ class UserListActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main) {
                     pbUserList.visibility = View.GONE
                     tvNoUsers.visibility = View.VISIBLE
+                    Log.e("FetchUsersException", "Erro: ${e.message}", e)
                     Toast.makeText(this@UserListActivity, "Falha na conexão: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
@@ -144,13 +155,13 @@ class UserListActivity : AppCompatActivity() {
             etPassword.hint = "Nova Senha (deixe em branco para não alterar)"
             tvPasswordHint.visibility = View.VISIBLE
             switchAtivo.isChecked = userToEdit.ativo
-            val cargoPosition = cargoValues.indexOfFirst { it.name == userToEdit.cargo }
+            val cargoPosition = cargoValues.indexOfFirst { it.name.equals(userToEdit.cargo, ignoreCase = true) }
             if (cargoPosition != -1) spinnerCargo.setSelection(cargoPosition)
         } else {
             dialogTitle = "Adicionar Novo Usuário"
             switchAtivo.isChecked = true
             tvPasswordHint.visibility = View.GONE
-            etPassword.hint = "Senha" // Senha obrigatória para novo
+            etPassword.hint = "Senha"
         }
 
         val dialog = AlertDialog.Builder(this)
@@ -166,53 +177,92 @@ class UserListActivity : AppCompatActivity() {
                 val fullName = etFullName.text.toString().trim()
                 val login = etLogin.text.toString().trim()
                 val email = etEmail.text.toString().trim()
-                val password = etPassword.text.toString().trim()
+                val passwordInput = etPassword.text.toString() // Não fazer trim aqui ainda para validar o pattern
                 val selectedCargoEnumName = cargoValues[spinnerCargo.selectedItemPosition].name
                 val ativo = switchAtivo.isChecked
 
-                // Validações
-                if (fullName.isEmpty() || login.isEmpty() || email.isEmpty()) {
-                    Toast.makeText(this, "Nome, Login e Email são obrigatórios.", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+                var isValid = true
+
+                // Validação Nome
+                val nomePattern = "^[a-zA-ZÀ-ÿ\\s]+$".toRegex()
+                if (fullName.isEmpty()) {
+                    etFullName.error = "Nome é obrigatório"
+                    isValid = false
+                } else if (fullName.length < 3 || fullName.length > 100) {
+                    etFullName.error = "Nome deve ter entre 3 e 100 caracteres"
+                    isValid = false
+                } else if (!fullName.matches(nomePattern)) {
+                    etFullName.error = "Nome deve conter apenas letras e espaços"
+                    isValid = false
+                } else {
+                    etFullName.error = null
                 }
-                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    etEmail.error = "Email inválido"
-                    return@setOnClickListener
+
+                // Validação Login
+                val loginPattern = "^[a-zA-Z0-9._-]+$".toRegex()
+                if (login.isEmpty()) {
+                    etLogin.error = "Login é obrigatório"
+                    isValid = false
+                } else if (login.length < 3 || login.length > 50) {
+                    etLogin.error = "Login deve ter entre 3 e 50 caracteres"
+                    isValid = false
+                } else if (!login.matches(loginPattern)) {
+                    etLogin.error = "Login: letras, números, '.', '_' ou '-'"
+                    isValid = false
+                } else {
+                    etLogin.error = null
+                }
+
+                // Validação Email
+                if (email.isEmpty()) {
+                    etEmail.error = "Email é obrigatório"
+                    isValid = false
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    etEmail.error = "Formato de email inválido"
+                    isValid = false
                 } else {
                     etEmail.error = null
                 }
 
-                if (userToEdit == null && password.isEmpty()) {
-                    etPassword.error = "Senha obrigatória para novo usuário."
+                // Validação Senha
+                if (userToEdit == null && passwordInput.isEmpty()) { // Obrigatória para novo usuário
+                    etPassword.error = "Senha obrigatória para novo usuário"
+                    isValid = false
+                } else if (passwordInput.isNotEmpty()) { // Validar se preenchida (para novo ou edição)
+                    if (passwordInput.length < 6) {
+                        etPassword.error = "Senha: mínimo 6 caracteres"
+                        isValid = false
+                    } else {
+                        val passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@#$%^&+=!])(.{6,})$".toRegex()
+                        if (!passwordInput.matches(passwordPattern)) {
+                            etPassword.error = "Senha: letra, número e caractere especial"
+                            isValid = false
+                        } else {
+                            etPassword.error = null
+                        }
+                    }
+                } else { // Senha vazia na edição é OK, limpa o erro
+                    etPassword.error = null
+                }
+
+
+                if (!isValid) {
+                    Toast.makeText(this@UserListActivity, "Corrija os campos destacados.", Toast.LENGTH_LONG).show()
                     return@setOnClickListener
                 }
 
-                // Validação do formato/tamanho da senha SE ela foi preenchida (tanto para novo quanto para edição)
-                if (password.isNotEmpty()) {
-                    if (password.length < 6) {
-                        etPassword.error = "Senha: Mínimo 6 caracteres."
-                        return@setOnClickListener
-                    }
-                    // Adicione sua regex de complexidade de senha aqui se desejar
-                    // val passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@#$%^&+=!])(.{6,})$".toRegex()
-                    // if (!password.matches(passwordPattern)) {
-                    //     etPassword.error = "Senha deve conter letra, número e caractere especial."
-                    //     return@setOnClickListener
-                    // }
-                }
-                etPassword.error = null
-
-
                 pbDialog.visibility = View.VISIBLE
-                positiveButton.isEnabled = false // Desabilita botão durante a chamada
+                positiveButton.isEnabled = false
 
                 if (userToEdit != null) { // EDIÇÃO
                     val updateRequest = UsuarioUpdateRequest(
-                        nome = fullName, login = login, email = email,
-                        cargo = selectedCargoEnumName, ativo = ativo
+                        nome = fullName,
+                        login = login,
+                        email = email,
+                        cargo = selectedCargoEnumName,
+                        ativo = ativo,
+                        senha = if (passwordInput.isNotEmpty()) passwordInput else null // Envia senha apenas se preenchida
                     )
-                    // Adicionar lógica para enviar senha apenas se password não estiver em branco
-                    // e seu backend souber lidar com isso no UsuarioUpdateRequest
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
                             val bearerToken = "Bearer $authToken"
@@ -221,7 +271,7 @@ class UserListActivity : AppCompatActivity() {
                                 pbDialog.visibility = View.GONE
                                 positiveButton.isEnabled = true
                                 if (response.isSuccessful) {
-                                    Toast.makeText(this@UserListActivity, "Usuário atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this@UserListActivity, "Usuário '${response.body()?.nome}' atualizado!", Toast.LENGTH_SHORT).show()
                                     fetchUsers()
                                     dialog.dismiss()
                                 } else {
@@ -233,14 +283,18 @@ class UserListActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 pbDialog.visibility = View.GONE
                                 positiveButton.isEnabled = true
+                                Log.e("UpdateUserExc", "Erro: ${e.message}", e)
                                 Toast.makeText(this@UserListActivity, "Exceção ao atualizar: ${e.message}", Toast.LENGTH_LONG).show()
                             }
                         }
                     }
                 } else { // CRIAÇÃO
                     val createRequest = UsuarioCreateRequest(
-                        nome = fullName, login = login, email = email,
-                        senha = password, cargo = selectedCargoEnumName
+                        nome = fullName,
+                        login = login,
+                        email = email,
+                        senha = passwordInput, // passwordInput já foi validada como não vazia
+                        cargo = selectedCargoEnumName
                     )
                     CoroutineScope(Dispatchers.IO).launch {
                         try {
@@ -262,6 +316,7 @@ class UserListActivity : AppCompatActivity() {
                             withContext(Dispatchers.Main) {
                                 pbDialog.visibility = View.GONE
                                 positiveButton.isEnabled = true
+                                Log.e("CreateUserExc", "Erro: ${e.message}", e)
                                 Toast.makeText(this@UserListActivity, "Exceção ao criar: ${e.message}", Toast.LENGTH_LONG).show()
                             }
                         }
@@ -279,12 +334,11 @@ class UserListActivity : AppCompatActivity() {
                 val errorResponse = Gson().fromJson(errorBody, MessageResponse::class.java)
                 "$defaultTitlePrefix: ${errorResponse.message}"
             } catch (parseEx: Exception) {
-                "$defaultTitlePrefix: $errorBody"
+                "$defaultTitlePrefix: $errorBody (Falha ao parsear erro detalhado)"
             }
         }
         Toast.makeText(this@UserListActivity, errorMessage, Toast.LENGTH_LONG).show()
     }
-
 
     private fun showDeleteConfirmationDialog(user: UsuarioResponse) {
         AlertDialog.Builder(this)
@@ -302,7 +356,7 @@ class UserListActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val bearerToken = "Bearer $authToken"
-                val response = RetrofitClient.userInstance.deleteUser(bearerToken, userId)
+                val response = RetrofitClient.userInstance.deleteUser(bearerToken, userId) // Corrigido
                 withContext(Dispatchers.Main) {
                     pbUserList.visibility = View.GONE
                     if (response.isSuccessful) {
@@ -316,6 +370,7 @@ class UserListActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     pbUserList.visibility = View.GONE
+                    Log.e("DeleteUserExc", "Erro: ${e.message}", e)
                     Toast.makeText(this@UserListActivity, "Exceção ao excluir: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }

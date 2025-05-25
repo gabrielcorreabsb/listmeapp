@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     // Adicione o kapt se precisar de processamento de anotações
     id("kotlin-kapt")
+
 }
 
 android {
@@ -56,6 +57,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.maskara)
+
 
     // Navegação Compose
     implementation("androidx.navigation:navigation-compose:2.7.5")
@@ -96,4 +99,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
+
+
 }

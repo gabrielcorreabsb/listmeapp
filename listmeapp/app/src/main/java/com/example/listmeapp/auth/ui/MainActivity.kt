@@ -1,32 +1,35 @@
-package com.example.listmeapp.auth.ui // Pacote da sua MainActivity
+package com.example.listmeapp.auth.ui
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
+import android.widget.ImageButton // Certifique-se que está importado
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.listmeapp.R
-import com.example.listmeapp.auth.ui.LoginActivity // Se estiver no mesmo pacote
-import com.example.listmeapp.data.api.RetrofitClient // Se for chamar o endpoint do backend
+// Importe UserListActivity do pacote correto onde você a criou
+import com.example.listmeapp.auth.ui.UserListActivity // Supondo que UserListActivity está em admin.ui
+import com.example.listmeapp.data.api.RetrofitClient
+import com.example.listmeapp.auth.ui.ProductListActivity
+import com.example.listmeapp.auth.ui.ClientListActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-import android.widget.ImageButton // Importar ImageButton
-
 class MainActivity : AppCompatActivity() {
 
-    // Remova ou mantenha btnLogout dependendo se ainda existe no layout
-    // private lateinit var btnLogout: Button
-    private lateinit var ibLogout: ImageButton // Novo ImageButton para o logout na sidebar
-    private lateinit var ibUser: ImageButton // Botão para admin
+    private lateinit var ibLogout: ImageButton
+    private lateinit var ibUser: ImageButton // Para gerenciar usuários (admin)
+    private lateinit var ibManageProducts: ImageButton // Para gerenciar produtos (admin/vendedor)
+    private lateinit var ibManagerClient: ImageButton // Para gerenciar clientes (admin/vendedor)
+    private lateinit var ibOrcamento: ImageButton // Para os orcamentos (admin/vendedor)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,20 +42,26 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        // --- LÓGICA DO BOTÃO DE LOGOUT ---
-        ibLogout = findViewById(R.id.ibLogout) // Encontra o ImageButton de logout
-        ibUser = findViewById(R.id.ibUser)
+        // Inicialização dos ImageButtons
+        ibLogout = findViewById(R.id.ibLogout)
+        ibUser = findViewById(R.id.ibUser) // Assumindo que R.id.ibUser é para gerenciar usuários
+        ibManageProducts = findViewById(R.id.ibProduct) // Assumindo R.id.ibManageProducts para produtos
+        ibManagerClient = findViewById(R.id.ibClient)
+        ibOrcamento = findViewById(R.id.ibOrcamento)
+
+
+
+        // Configurar OnClickListener para Logout
         ibLogout.setOnClickListener {
-            performLogout() // A função performLogout() que você já tem
+            performLogout()
         }
-        // --- FIM DA LÓGICA DO BOTÃO DE LOGOUT ---
 
-
-        // Verificar o cargo do usuário e mostrar/ocultar o botão de admin
+        // Obter o cargo do usuário
         val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
         val userCargo = sharedPreferences.getString("USER_CARGO", null)
 
-        if (userCargo == "ADMIN") { // Certifique-se que "ADMIN" corresponde ao valor salvo
+        // Configurar botão de Gerenciar Usuários (Admin)
+        if (userCargo == "ADMIN") {
             ibUser.visibility = View.VISIBLE
             ibUser.setOnClickListener {
                 val intent = Intent(this, UserListActivity::class.java)
@@ -61,7 +70,29 @@ class MainActivity : AppCompatActivity() {
         } else {
             ibUser.visibility = View.GONE
         }
-    }
+
+        // Configurar botão de Gerenciar Produtos, Clientes e Orçamentos (Admin ou Vendedor)
+        if (userCargo == "ADMIN" || userCargo == "VENDEDOR") {
+            ibManageProducts.visibility = View.VISIBLE
+            ibManagerClient.visibility = View.VISIBLE
+            ibManageProducts.setOnClickListener {
+                val intent = Intent(this, ProductListActivity::class.java)
+                startActivity(intent)
+            }
+            ibManagerClient.setOnClickListener {
+                val intent = Intent(this, ClientListActivity::class.java)
+                startActivity(intent)
+            }
+                ibOrcamento.setOnClickListener {
+                    val intent = Intent(this, CreateBudgetActivity::class.java)
+                    startActivity(intent)
+                }
+            } else {
+                ibManageProducts.visibility = View.GONE
+                ibManagerClient.visibility = View.GONE
+            }
+
+    } // FIM DO MÉTODO ONCREATE
 
     // A função performLogout() e redirectToLogin() permanecem as mesmas
     private fun performLogout() {
@@ -69,27 +100,24 @@ class MainActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("AUTH_TOKEN", null)
 
-        // Limpar SharedPreferences COMPLETAMENTE ao fazer logout
         with(sharedPreferences.edit()) {
-            clear() // Remove todos os dados (token, cargo, etc.)
+            clear()
             apply()
         }
         Log.i("Auth", "SharedPreferences limpas.")
 
-        // Opcional: Chamar API de logout do backend
         if (token != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val bearerToken = "Bearer $token"
-                    // Supondo que o método logout está em authInstance ou userInstance
-                    val response = RetrofitClient.instance.logout(bearerToken) // Ajuste se necessário
+                    val response = RetrofitClient.instance.logout(bearerToken) // Usando 'instance' para AuthApi
                     withContext(Dispatchers.Main) {
                         if (response.isSuccessful) {
                             Log.d("LogoutAPI", "Logout no backend bem-sucedido.")
                         } else {
                             Log.e("LogoutAPI", "Falha no logout do backend: ${response.code()}")
                         }
-                        redirectToLogin() // Redireciona independentemente do resultado da API
+                        redirectToLogin()
                     }
                 } catch (e: Exception) {
                     Log.e("LogoutAPI", "Exceção ao chamar API de logout: ${e.message}", e)
@@ -104,8 +132,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun redirectToLogin() {
-        // Precisa importar LoginActivity
-        val intent = Intent(this@MainActivity, com.example.listmeapp.auth.ui.LoginActivity::class.java)
+        val intent = Intent(this@MainActivity, LoginActivity::class.java) // Importe LoginActivity se necessário
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()

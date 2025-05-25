@@ -32,13 +32,18 @@ android:name=".auth.ui.MainActivity"
             android:name=".auth.ui.UserListActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".auth.ui.ProductListActivity"
+            android:exported="false" />
 
-        <!-- Se você tiver outras Activities, declare-as aqui também -->
-    <!-- Exemplo:
-    <activity
-        android:name=".algumaoutra.OutraActivity"
+        <activity
+            android:name=".auth.ui.ClientListActivity"
         android:exported="false" />
-    -->
+
+        <activity
+            android:name=".auth.ui.CreateBudgetActivity"
+        android:exported="false"
+        android:windowSoftInputMode="adjustResize" />
 
     </application>
     </manifest>

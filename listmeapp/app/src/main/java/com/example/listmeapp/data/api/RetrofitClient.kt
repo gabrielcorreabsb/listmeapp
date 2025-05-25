@@ -1,6 +1,7 @@
 package com.example.listmeapp.data.api
 
 
+
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -35,5 +36,32 @@ object RetrofitClient {
             .addConverterFactory(GsonConverterFactory.create()) // Adicione TypeAdapters para LocalDateTime se necessário
             .build()
         retrofit.create(UserApi::class.java)
+    }
+
+val productApi: ProductApi by lazy {
+    val retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(okHttpClient)
+        .addConverterFactory(GsonConverterFactory.create()) // Adicione TypeAdapters para LocalDateTime se necessário
+        .build()
+    retrofit.create(ProductApi::class.java)
+}
+
+    val clientApi : ClientApi by lazy {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create()) // Adicione TypeAdapters para LocalDateTime se necessário
+            .build()
+        retrofit.create(ClientApi::class.java)
+    }
+
+    val orcamentoApi : OrcamentoApi by lazy {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create()) // Adicione TypeAdapters para LocalDateTime se necessário
+            .build()
+        retrofit.create(OrcamentoApi::class.java)
     }
 }
