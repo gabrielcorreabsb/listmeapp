@@ -188,4 +188,20 @@ public class OrcamentoService {
         }
         orcamentoRepository.deleteById(id);
     }
+
+    @Transactional
+    public OrcamentoResponseDTO atualizarStatusOrcamento(Long id, Orcamento.StatusOrcamento novoStatus) {
+        Orcamento orcamento = orcamentoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Orçamento não encontrado com ID: " + id));
+
+
+         if (orcamento.getStatus() == Orcamento.StatusOrcamento.CONCLUIDO && novoStatus == Orcamento.StatusOrcamento.PENDENTE) {
+             throw new IllegalStateException("Não é possível alterar o status de um orçamento concluído para pendente.");
+         }
+
+        orcamento.setStatus(novoStatus);
+        // Você pode querer atualizar uma data_modificacao ou registrar a mudança de status em um log/histórico
+        Orcamento orcamentoAtualizado = orcamentoRepository.save(orcamento);
+        return OrcamentoResponseDTO.fromEntity(orcamentoAtualizado);
+    }
 }

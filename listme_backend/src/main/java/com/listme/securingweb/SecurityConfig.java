@@ -120,6 +120,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
+                "https://listmeapp.tech",
                 "http://localhost:8080",
                 "http://localhost:3000",
                 "capacitor://localhost",
