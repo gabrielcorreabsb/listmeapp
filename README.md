@@ -38,7 +38,7 @@ O ListMe visa otimizar a gestão comercial, melhorar a organização dos produto
 - André Luís Araújo Silva
 - Bruno
 - Daniel Castro R. Santos
-- Gabriel Corrêa
+- Gabriel Corrêa ((DEV FULL STACK))
 - Jheniffer
 - João Pedro
 - Micael
