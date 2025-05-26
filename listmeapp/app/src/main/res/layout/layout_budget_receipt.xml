@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/receipt_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:gravity="center_vertical"
+android:layout_marginBottom="16dp">
+<ImageView
+    android:id="@+id/receipt_logo"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:src="@mipmap/ic_launcher" />
+<TextView
+    android:id="@+id/receipt_company_name"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Sua Empresa ListMe"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:layout_marginStart="16dp"/>
+</LinearLayout>
+
+<TextView
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="ORÇAMENTO"
+android:textSize="20sp"
+android:textStyle="bold"
+android:gravity="center"
+android:layout_marginBottom="8dp"/>
+
+<TextView
+android:id="@+id/receipt_budget_id"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+tools:text="Orçamento Nº: 123"
+android:layout_marginBottom="8dp"/>
+
+<TextView
+android:id="@+id/receipt_date"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+tools:text="Data: 25/05/2025 10:30"
+android:layout_marginBottom="16dp"/>
+
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="CLIENTE:"
+android:textStyle="bold"/>
+<TextView
+android:id="@+id/receipt_client_name"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+tools:text="Nome Completo do Cliente"/>
+<TextView
+android:id="@+id/receipt_client_document"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+tools:text="CNPJ/CPF: 00.000.000/0000-00"/>
+<TextView
+android:id="@+id/receipt_client_phone"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+tools:text="Telefone: (00) 00000-0000"/>
+<TextView
+android:id="@+id/receipt_client_address"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+tools:text="Endereço Completo do Cliente"
+android:layout_marginBottom="16dp"/>
+
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="VENDEDOR:"
+android:textStyle="bold"/>
+<TextView
+android:id="@+id/receipt_employee_name"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+tools:text="Nome do Funcionário"
+android:layout_marginBottom="16dp"/>
+
+<View
+android:layout_width="match_parent"
+android:layout_height="1dp"
+android:background="@android:color/darker_gray"
+android:layout_marginBottom="8dp"/>
+
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="ITENS:"
+android:textStyle="bold"
+android:layout_marginBottom="4dp"/>
+
+
+<LinearLayout
+android:id="@+id/receipt_items_container"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical"
+android:layout_marginBottom="8dp">
+<!-- Itens serão adicionados aqui programaticamente -->
+</LinearLayout>
+
+<View
+android:layout_width="match_parent"
+android:layout_height="1dp"
+android:background="@android:color/darker_gray"
+android:layout_marginTop="8dp"
+android:layout_marginBottom="16dp"/>
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal">
+<TextView
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="FORMA DE PAGAMENTO:"
+    android:textStyle="bold"/>
+<TextView
+    android:id="@+id/receipt_payment_method"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="end"
+    tools:text="Cartão de Crédito"/>
+</LinearLayout>
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="horizontal"
+android:layout_marginTop="8dp">
+<TextView
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="TOTAL DO ORÇAMENTO:"
+    android:textSize="16sp"
+    android:textStyle="bold"/>
+<TextView
+    android:id="@+id/receipt_total_value"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="end"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:textColor="?attr/colorPrimary"
+    tools:text="R$ 1.250,75"/>
+</LinearLayout>
+
+<TextView
+android:id="@+id/receipt_observations"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginTop="16dp"
+tools:text="Observações: Cliente pediu desconto especial."
+android:textSize="12sp"
+android:textStyle="italic"/>
+
+    <!-- Rodapé (Opcional) -->
+<TextView
+android:id="@+id/receipt_footer"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:text="Obrigado pela preferência!"
+android:gravity="center"
+android:textSize="10sp"
+android:layout_marginTop="24dp"/>
+
+    </LinearLayout>
+

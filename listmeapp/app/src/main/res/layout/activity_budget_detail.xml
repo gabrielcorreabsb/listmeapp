@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".auth.ui.BudgetDetailActivity"> <!-- Ajuste o pacote se necessário -->
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="?attr/actionBarTheme">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarBudgetDetail"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:title="Detalhes do Orçamento"
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:navigationIcon="@drawable/ic_arrow_back"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ID do Orçamento:"/>
+            <TextView
+                android:id="@+id/tvDetailBudgetIdValue"
+                style="@style/DetailValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="#123"/>
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cliente:"/>
+            <TextView
+                android:id="@+id/tvDetailClientName"
+                style="@style/DetailValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Nome Completo do Cliente"/>
+            <TextView
+                android:id="@+id/tvDetailClientContact"
+                style="@style/DetailValueSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Telefone / CNPJ"/>
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Funcionário:"/>
+            <TextView
+                android:id="@+id/tvDetailEmployeeName"
+                style="@style/DetailValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Nome do Funcionário"/>
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Data do Orçamento:"/>
+            <TextView
+                android:id="@+id/tvDetailBudgetDate"
+                style="@style/DetailValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="25/05/2025 10:30"/>
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Status:"/>
+            <TextView
+                android:id="@+id/tvDetailBudgetStatus"
+                style="@style/DetailValue"
+                android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            tools:text="PENDENTE"
+            android:textStyle="bold"/>
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Itens:"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDetailBudgetItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="80dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_budget_product_detail" />
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Forma de Pagamento:"/>
+            <TextView
+                android:id="@+id/tvDetailPaymentMethod"
+                style="@style/DetailValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Cartão de Crédito"/>
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Observações:"/>
+            <TextView
+                android:id="@+id/tvDetailObservations"
+                style="@style/DetailValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="Nenhuma observação."/>
+
+            <TextView
+                style="@style/DetailLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="VALOR TOTAL:"/>
+            <TextView
+                android:id="@+id/tvDetailTotalValue"
+                style="@style/DetailValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="R$ 1.250,75"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary"/>
+
+            <!-- SEÇÃO DE AÇÕES DE STATUS (NOVO) -->
+            <LinearLayout
+                android:id="@+id/layoutStatusActions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                tools:visibility="visible" >
+
+                <Button
+                    android:id="@+id/btnMarkAsPaid"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Marcar como Concluído/Pago"
+                    app:icon="@drawable/ic_payment"
+                    android:layout_marginBottom="8dp"/>
+
+                <Button
+                    android:id="@+id/btnMarkAsSent"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Marcar como Enviado"
+                    app:icon="@drawable/ic_send"
+                    android:layout_marginBottom="8dp"/>
+
+                <Button
+                    android:id="@+id/btnCancelBudget"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_orange_dark"
+                    app:strokeColor="@android:color/holo_orange_dark"
+                    app:iconTint="@android:color/holo_orange_dark"
+                    app:icon="@drawable/ic_cancel"
+                    android:text="Cancelar Orçamento" />
+            </LinearLayout>
+
+            <!-- SEÇÃO DE AÇÕES GERAIS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"> <!-- Ajustado marginTop para separar das ações de status -->
+
+                <Button
+                    android:id="@+id/btnEditBudget"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Editar"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+                <Button
+                    android:id="@+id/btnShareBudget"
+                    style="?attr/materialButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Compartilhar"
+                    app:icon="@drawable/ic_share" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnDeleteBudget"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Excluir Orçamento"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+            <ProgressBar
+                android:id="@+id/pbBudgetDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

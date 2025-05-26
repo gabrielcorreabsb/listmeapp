@@ -42,4 +42,11 @@ interface OrcamentoApi {
         @Header("Authorization") token: String,
         @Path("id") orcamentoId: Long
     ): Response<Void> // Ou uma resposta com mensagem, se o backend fornecer
+
+    @PUT("api/orcamentos/{id}/status")
+    suspend fun updateOrcamentoStatus(
+        @Header("Authorization") token: String,
+        @Path("id") orcamentoId: Long,
+        @Query("status") novoStatus: String // Envia o nome do Enum como String
+    ): Response<OrcamentoResponseDTO> // O backend retorna o orçamento atualizado
 }

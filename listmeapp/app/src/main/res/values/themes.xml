@@ -1,12 +1,14 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"> <!-- ÚNICA TAG <resources> -->
+
+    <!-- SEU TEMA PRINCIPAL DA APLICAÇÃO -->
     <style name="Theme.ListMeApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Cores Primárias -->
         <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryVariant">@color/primaryDarkColor</item> <!-- Usado pela status bar por padrão -->
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
         <item name="colorOnPrimary">@color/onPrimaryColor</item>
 
-        <!-- Cores Secundárias (se você usar) -->
+        <!-- Cores Secundárias (opcional) -->
         <!-- <item name="colorSecondary">@color/teal_200</item> -->
         <!-- <item name="colorSecondaryVariant">@color/teal_700</item> -->
         <!-- <item name="colorOnSecondary">@color/black</item> -->
@@ -23,9 +25,17 @@
 
         <!-- Estilo para Botões -->
         <item name="materialButtonStyle">@style/Widget.ListMeApp.Button</item>
+
+        <!-- Opcional: Se quiser definir estilos de texto padrão para o tema -->
+        <item name="android:textAppearanceLarge">@style/TextAppearance.Material3.TitleLarge</item>
+        <item name="android:textAppearanceMedium">@style/TextAppearance.Material3.TitleMedium</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.Material3.TitleSmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Material3.LabelLarge</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Material3.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Material3.BodyMedium</item>
     </style>
 
-    <!-- Estilos para componentes específicos -->
+    <!-- ESTILOS PARA COMPONENTES ESPECÍFICOS -->
     <style name="Widget.ListMeApp.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/primaryColor</item>
         <item name="hintTextColor">@color/primaryColor</item>
@@ -42,4 +52,41 @@
         <item name="cornerRadius">8dp</item>
     </style>
 
-</resources>
+    <!-- ESTILOS QUE VOCÊ TINHA NO PRIMEIRO BLOCO <resources> -->
+    <style name="SidebarIcon" parent="Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="tint">@color/onPrimaryColor</item>
+    </style>
+
+    <style name="DetailLabel" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <!-- Adicione layout_width e layout_height aqui se ainda precisar,
+             embora geralmente não seja necessário em estilos de APARÊNCIA de texto.
+             O layout que usa este estilo deve definir as dimensões. -->
+        <!-- Exemplo:
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        -->
+    </style>
+    <style name="DetailValue" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <!-- Exemplo:
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        -->
+    </style>
+    <style name="DetailValueSmall" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <!-- Exemplo:
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        -->
+    </style>
+
+</resources> <!-- FIM DA ÚNICA TAG <resources> -->

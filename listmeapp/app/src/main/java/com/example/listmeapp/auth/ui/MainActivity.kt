@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
                 ibOrcamento.setOnClickListener {
-                    val intent = Intent(this, CreateBudgetActivity::class.java)
+                    val intent = Intent(this, BudgetListActivity::class.java)
                     startActivity(intent)
                 }
             } else {

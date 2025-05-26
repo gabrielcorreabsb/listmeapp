@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvBudgetClientName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textSize="16sp"
+            tools:text="Cliente: Nome do Cliente"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvBudgetStatus"/>
+
+        <TextView
+            android:id="@+id/tvBudgetId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="ID: #123"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/tvBudgetClientName"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:id="@+id/tvBudgetDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Data: 25/05/2025"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/tvBudgetId"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvBudgetId"
+            android:layout_marginStart="16dp"/>
+
+        <TextView
+            android:id="@+id/tvBudgetTotalValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Total: R$ 1.250,75"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/tvBudgetId"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvBudgetStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="PENDENTE"
+            android:textStyle="bold"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:background="@drawable/status_background_pending"
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

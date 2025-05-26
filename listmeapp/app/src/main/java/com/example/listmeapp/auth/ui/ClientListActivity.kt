@@ -1,30 +1,31 @@
-package com.example.listmeapp.auth.ui // Ou o pacote correto da sua Activity
+package com.example.listmeapp.auth.ui // Sugestão: mover para pacote client.ui
 
-import android.app.Activity // Import para Activity.RESULT_OK
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns // Para validação de Email
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter // Para o Spinner no diálogo (se usado)
 import android.widget.ProgressBar
-import android.widget.Spinner     // Para o Spinner no diálogo (se usado)
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager // Import para LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.listmeapp.R
 import com.example.listmeapp.data.api.RetrofitClient
 import com.example.listmeapp.data.model.ClienteDTO
 import com.example.listmeapp.data.model.MessageResponse
-import com.example.listmeapp.auth.ui.ClientListAdapter // Ajuste o pacote do adapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
-import com.santalu.maskara.Mask // Imports da maskara
+import com.santalu.maskara.Mask
 import com.santalu.maskara.MaskChangedListener
 import com.santalu.maskara.MaskStyle
 import kotlinx.coroutines.CoroutineScope
@@ -45,13 +46,9 @@ class ClientListActivity : AppCompatActivity() {
     private var userCargo: String? = null
     private var isAdmin: Boolean = false
     private var canCreateEdit: Boolean = false
+    private var isSelectMode: Boolean = false
 
-    private var isSelectMode: Boolean = false // Para saber se está em modo de seleção
-
-    // Listeners para as máscaras, para poder obter valor não mascarado se necessário
-    private lateinit var cnpjCpfListener: MaskChangedListener
-    private lateinit var phoneListener: MaskChangedListener
-
+    private lateinit var phoneListener: MaskChangedListener // Mantido para telefone
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +58,6 @@ class ClientListActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener {
-            // Se estiver em modo de seleção e o usuário voltar, considera como cancelado
             if (isSelectMode) {
                 setResult(Activity.RESULT_CANCELED)
             }
@@ -73,14 +69,13 @@ class ClientListActivity : AppCompatActivity() {
         tvNoClients = findViewById(R.id.tvNoClients)
         fabAddClient = findViewById(R.id.fabAddClient)
 
-        // Verifica se a activity foi chamada em modo de seleção
         isSelectMode = intent.getBooleanExtra("SELECT_MODE", false)
 
         if (isSelectMode) {
             toolbar.title = "Selecionar Cliente"
-            fabAddClient.visibility = View.GONE // Esconde FAB no modo de seleção
+            fabAddClient.visibility = View.GONE
         } else {
-            toolbar.title = "Gerenciar Clientes" // Título padrão
+            toolbar.title = "Gerenciar Clientes"
         }
 
         val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
@@ -89,15 +84,12 @@ class ClientListActivity : AppCompatActivity() {
         isAdmin = userCargo == "ADMIN"
         canCreateEdit = userCargo == "ADMIN" || userCargo == "VENDEDOR"
 
-
         if (authToken == null) {
             Toast.makeText(this, "Erro de autenticação.", Toast.LENGTH_LONG).show()
             finish()
             return
         }
 
-        // O FAB para adicionar cliente só deve ser visível e funcional se PUDER criar/editar
-        // E se NÃO estiver em modo de seleção.
         if (canCreateEdit && !isSelectMode) {
             fabAddClient.visibility = View.VISIBLE
             fabAddClient.setOnClickListener { showClientFormDialog(null) }
@@ -112,29 +104,25 @@ class ClientListActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         clientListAdapter = ClientListAdapter(
             emptyList(),
-            onItemClick = { client -> // Callback para clique no item inteiro
+            onItemClick = { client ->
                 if (isSelectMode) {
                     val resultIntent = Intent()
                     resultIntent.putExtra("SELECTED_CLIENT_JSON", Gson().toJson(client))
                     setResult(Activity.RESULT_OK, resultIntent)
                     finish()
-                } else {
-                    // Em modo normal, você poderia, por exemplo, abrir uma tela de detalhes do cliente
-                    // Toast.makeText(this, "Cliente ${client.nome} clicado.", Toast.LENGTH_SHORT).show()
                 }
             },
-            onEditClick = { client -> // Callback para o botão de editar DENTRO do item
-                // A checagem de canCreateEdit e !isSelectMode já está no Adapter/ViewHolder
-                showClientFormDialog(client)
+            onEditClick = { client ->
+                if (canCreateEdit && !isSelectMode) showClientFormDialog(client)
             },
-            onDeleteClick = { client -> // Callback para o botão de deletar DENTRO do item
-                // A checagem de isAdmin e !isSelectMode já está no Adapter/ViewHolder
-                showDeleteConfirmationDialog(client)
+            onDeleteClick = { client ->
+                if (isAdmin && !isSelectMode) showDeleteConfirmationDialog(client)
             },
-            canEdit = canCreateEdit, // Passa a permissão de edição
-            canDelete = isAdmin,     // Passa a permissão de deleção
-            isSelectMode = isSelectMode // Informa o adapter sobre o modo atual
+            canEdit = canCreateEdit,
+            canDelete = isAdmin,
+            isSelectMode = isSelectMode
         )
+        rvClients.layoutManager = LinearLayoutManager(this) // Adicionado LayoutManager
         rvClients.adapter = clientListAdapter
     }
 
@@ -197,22 +185,46 @@ class ClientListActivity : AppCompatActivity() {
             dialogTitle = "Adicionar Novo Cliente"
         }
 
-        // Aplicar Máscaras com maskara
-        val cnpjMaskPattern = if (etClientCnpj.text.toString().replace("[^0-9]".toRegex(), "").length > 11) {
-            "__.___.___/____-__" // CNPJ
-        } else {
-            "___.___.___-__"   // CPF
-        }
-        val cnpjMask = Mask(value = cnpjMaskPattern, character = '_', style = MaskStyle.PERSISTENT)
-        cnpjCpfListener = MaskChangedListener(cnpjMask)
-        etClientCnpj.addTextChangedListener(cnpjCpfListener)
-        // Para alternar a máscara dinamicamente com maskara seria mais complexo,
-        // exigindo remover e adicionar o listener ou usando um TextWatcher customizado
-        // que decida qual máscara aplicar. A regex do backend já é flexível.
-
+        // Aplicar Máscara de Telefone com maskara
         val phoneMask = Mask(value = "(__) [9]____-____", character = '_', style = MaskStyle.PERSISTENT)
         phoneListener = MaskChangedListener(phoneMask)
         etClientPhone.addTextChangedListener(phoneListener)
+
+        // Aplicar TextWatcher customizado para CNPJ/CPF
+        etClientCnpj.addTextChangedListener(object : TextWatcher {
+            private var isUpdating = false
+            private val cnpjMask = "##.###.###/####-##"
+            private val cpfMask = "###.###.###-##"
+            private var old = ""
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                val str = s.toString().replace("[^0-9]".toRegex(), "")
+                if (str == old || isUpdating) {
+                    old = str
+                    return
+                }
+                isUpdating = true
+                val maskToApply = if (str.length > 11) cnpjMask else cpfMask
+                var masked = ""
+                var i = 0
+                for (m_char in maskToApply.toCharArray()) {
+                    if (i >= str.length) break
+                    if (m_char == '#') { // Usando '#' como placeholder da máscara
+                        masked += str[i]
+                        i++
+                    } else {
+                        masked += m_char
+                    }
+                }
+                etClientCnpj.setText(masked)
+                etClientCnpj.setSelection(masked.length)
+                isUpdating = false
+                old = str
+            }
+        })
+
 
         val dialog = AlertDialog.Builder(this)
             .setTitle(dialogTitle)
@@ -225,36 +237,42 @@ class ClientListActivity : AppCompatActivity() {
             val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             positiveButton.setOnClickListener {
                 val name = etClientName.text.toString().trim()
-                val cnpjCpfInput = etClientCnpj.text.toString().trim()
+                val cnpjCpfInput = etClientCnpj.text.toString().trim() // <<-- PRIMEIRA DECLARAÇÃO (E ÚNICA AGORA)
                 val email = etClientEmail.text.toString().trim()
                 val phoneInput = etClientPhone.text.toString().trim()
                 val address = etClientAddress.text.toString().trim()
 
                 var isValid = true
-                // ... (Validações como na resposta anterior) ...
-                if (name.isEmpty()) { /* ... */ isValid = false } else { etClientName.error = null}
-                // CNPJ/CPF
+
+                if (name.isEmpty()) {
+                    etClientName.error = "Nome é obrigatório"; isValid = false
+                } else { etClientName.error = null }
+
                 val unmaskedCnpjCpf = cnpjCpfInput.replace("[^0-9]".toRegex(), "")
                 val cnpjCpfPatternBackend = "^([0-9]{2}(\\.?[0-9]{3}){2}\\/?[0-9]{4}\\-?[0-9]{2})|([0-9]{3}(\\.?[0-9]{3}){2}\\-?[0-9]{2})$".toRegex()
-                if (cnpjCpfInput.isEmpty()) { etClientCnpj.error = "CNPJ/CPF é obrigatório"; isValid = false
+
+                if (cnpjCpfInput.isEmpty()) {
+                    etClientCnpj.error = "CNPJ/CPF é obrigatório"; isValid = false
                 } else if (!cnpjCpfInput.matches(cnpjCpfPatternBackend) || (unmaskedCnpjCpf.length != 11 && unmaskedCnpjCpf.length != 14)) {
                     etClientCnpj.error = "CNPJ/CPF inválido"; isValid = false
                 } else { etClientCnpj.error = null }
-                // Email
-                if (email.isEmpty()) { etClientEmail.error = "Email é obrigatório"; isValid = false
-                } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+                if (email.isEmpty()) {
+                    etClientEmail.error = "Email é obrigatório"; isValid = false
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) { // Usar android.util.Patterns
                     etClientEmail.error = "Formato de email inválido"; isValid = false
                 } else { etClientEmail.error = null }
-                // Telefone
+
                 val unmaskedPhone = phoneInput.replace("[^0-9]".toRegex(), "")
-                if (phoneInput.isEmpty()) { etClientPhone.error = "Telefone é obrigatório"; isValid = false
+                if (phoneInput.isEmpty()) {
+                    etClientPhone.error = "Telefone é obrigatório"; isValid = false
                 } else if (unmaskedPhone.length !in 10..11) {
                     etClientPhone.error = "Telefone inválido (10 ou 11 dígitos com DDD)"; isValid = false
                 } else { etClientPhone.error = null }
-                // Endereço
-                if (address.isEmpty()) { etClientAddress.error = "Endereço é obrigatório"; isValid = false
-                } else { etClientAddress.error = null }
 
+                if (address.isEmpty()) {
+                    etClientAddress.error = "Endereço é obrigatório"; isValid = false
+                } else { etClientAddress.error = null }
 
                 if (!isValid) {
                     Toast.makeText(this@ClientListActivity, "Corrija os campos destacados.", Toast.LENGTH_LONG).show()

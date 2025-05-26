@@ -24,4 +24,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="status_pending">#FFAB00</color> <!-- Amber -->
+    <color name="status_sent">#2962FF</color>    <!-- Blue -->
+    <color name="status_approved">#00C853</color> <!-- Green -->
+    <color name="status_rejected">#D50000</color> <!-- Red -->
+    <color name="status_completed">#757575</color><!-- Grey -->
+    <color name="status_cancelled">#424242</color><!-- Dark Grey -->
 </resources>

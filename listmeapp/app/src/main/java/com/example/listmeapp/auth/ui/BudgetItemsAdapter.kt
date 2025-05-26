@@ -1,4 +1,4 @@
-package com.example.listmeapp.auth.ui
+package com.example.listmeapp.auth.ui // Exemplo de pacote
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,13 +10,13 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.listmeapp.R
-import com.example.listmeapp.data.model.ItemOrcamentoResponseDTO // Usaremos este para display
+import com.example.listmeapp.data.model.ItemOrcamentoResponseDTO
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
 
 class BudgetItemsAdapter(
-    private val items: MutableList<ItemOrcamentoResponseDTO>,
+    private val items: MutableList<ItemOrcamentoResponseDTO>, // Agora MutableList
     private val onRemoveClick: (position: Int) -> Unit,
     private val onQuantityChange: (position: Int, newQuantity: Int) -> Unit
 ) : RecyclerView.Adapter<BudgetItemsAdapter.BudgetItemViewHolder>() {
@@ -41,16 +41,18 @@ class BudgetItemsAdapter(
         notifyItemInserted(items.size - 1)
     }
 
-    fun removeItem(position: Int) {
-        if (position >= 0 && position < items.size) {
-            items.removeAt(position)
-            notifyItemRemoved(position)
-            notifyItemRangeChanged(position, items.size) // Para atualizar posições subsequentes
-        }
-    }
+    // O método removeItem já está sendo tratado na Activity, mas se quisesse aqui:
+    // fun removeItem(position: Int) {
+    //     if (position >= 0 && position < items.size) {
+    //         items.removeAt(position)
+    //         notifyItemRemoved(position)
+    //         notifyItemRangeChanged(position, items.size)
+    //     }
+    // }
 
     fun updateItemQuantity(position: Int, newQuantity: Int, newSubtotal: BigDecimal) {
         if (position >= 0 && position < items.size) {
+            // Atualiza a lista diretamente aqui, pois o adapter a possui
             items[position] = items[position].copy(
                 quantidade = newQuantity,
                 valorTotalItem = newSubtotal
@@ -62,29 +64,33 @@ class BudgetItemsAdapter(
     inner class BudgetItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvProductName: TextView = itemView.findViewById(R.id.tvBudgetItemProductName)
         private val tvPriceDetails: TextView = itemView.findViewById(R.id.tvBudgetItemPriceDetails)
-        private val etQuantity: EditText = itemView.findViewById(R.id.etBudgetItemQuantity)
+        val etQuantity: EditText = itemView.findViewById(R.id.etBudgetItemQuantity) // Tornar público ou adicionar getter
         private val tvSubtotal: TextView = itemView.findViewById(R.id.tvBudgetItemSubtotal)
         private val btnRemove: ImageButton = itemView.findViewById(R.id.btnRemoveBudgetItem)
         private var currentTextWatcher: TextWatcher? = null
 
-
         fun bind(item: ItemOrcamentoResponseDTO) {
             tvProductName.text = item.nomeProduto ?: "Produto Desconhecido"
-            val priceDetailText = "${item.quantidade} ${item.unidadeMedidaProduto ?: "UN"} x ${currencyFormat.format(item.precoUnitario ?: BigDecimal.ZERO)}"
+            val unit = item.unidadeMedidaProduto?.lowercase() ?: "un"
+            val priceDetailText = "${item.quantidade} $unit x ${currencyFormat.format(item.precoUnitario ?: BigDecimal.ZERO)}"
             tvPriceDetails.text = priceDetailText
             tvSubtotal.text = currencyFormat.format(item.valorTotalItem ?: BigDecimal.ZERO)
 
-            // Remover listener antigo antes de adicionar um novo para evitar múltiplos listeners
+            // Remover listener antigo para evitar múltiplos listeners e comportamento inesperado
             currentTextWatcher?.let { etQuantity.removeTextChangedListener(it) }
-            etQuantity.setText(item.quantidade.toString())
+            etQuantity.setText(item.quantidade.toString()) // Define a quantidade atual
+            etQuantity.setSelection(etQuantity.text.length) // Coloca o cursor no final
 
             currentTextWatcher = object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
                 override fun afterTextChanged(s: Editable?) {
-                    if (adapterPosition != RecyclerView.NO_POSITION) {
-                        val newQuantity = s.toString().toIntOrNull() ?: 0
-                        if (items[adapterPosition].quantidade != newQuantity) { // Evitar loops infinitos
+                    // Evita chamar o callback se a própria chamada de setText do adapter acionou isso
+                    if (adapterPosition != RecyclerView.NO_POSITION && etQuantity.hasFocus()) {
+                        val newQuantity = s.toString().toIntOrNull() ?: 0 // Default para 0 se inválido
+                        // Apenas chama onQuantityChange se a quantidade realmente mudou E é > 0
+                        // Se for 0, a Activity tratará como remoção.
+                        if (items[adapterPosition].quantidade != newQuantity) {
                             onQuantityChange(adapterPosition, newQuantity)
                         }
                     }
