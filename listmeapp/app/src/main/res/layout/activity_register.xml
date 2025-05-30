@@ -121,7 +121,7 @@
 
         <Button
             android:id="@+id/btnRegister"
-            style="@style/Widget.ListMeApp.Button"
+            style="@style/Widget.ListMeApp.Button.Default"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Cadastrar"

@@ -1,34 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Cores Primárias do App (baseado no design) -->
-    <color name="primaryColor">#008080</color> <!-- Um tom de Teal/Azul-esverdeado para a barra lateral e topo -->
-    <color name="primaryDarkColor">#006060</color> <!-- Uma variação mais escura, se necessário -->
-    <color name="primaryLightColor">#4cb0af</color> <!-- Uma variação mais clara, se necessário -->
-    <color name="onPrimaryColor">#FFFFFF</color> <!-- Cor do texto/ícones sobre a cor primária (branco) -->
 
-    <!-- Cores de Fundo e Superfície -->
-    <color name="backgroundColor">#F0F2F5</color> <!-- Cinza claro para o fundo principal -->
-    <color name="surfaceColor">#FFFFFF</color> <!-- Branco para cards, campos de texto -->
-    <color name="surfaceVariantColor">#E8E8E8</color> <!-- Cinza um pouco mais escuro para cards de notificação -->
+    <!-- I. CORES DA PALETA HUEMINT (Base para o App) -->
+    <color name="huemint_off_white">#f7fdf6</color>    <!-- Usado para app_background_color -->
+    <color name="huemint_teal_primary">#6bb7ac</color> <!-- Usado para primaryColor, login_button_text -->
+    <color name="huemint_teal_light">#6dc5be</color>   <!-- Usado para accentColor, gradient_start_color_new -->
 
+    <!-- II. CORES DERIVADAS OU COMPLEMENTARES À PALETA HUEMINT -->
+    <!-- Para o Gradiente Principal (se usado em alguma tela como Login) -->
+    <color name="gradient_start_color_new">@color/huemint_teal_light</color>
+    <color name="gradient_end_color_new">@color/huemint_teal_primary</color>
 
-    <!-- Cores de Texto -->
-    <color name="textColorPrimary">#212121</color> <!-- Preto/Cinza escuro para texto principal -->
-    <color name="textColorSecondary">#757575</color> <!-- Cinza para texto secundário -->
+    <!-- Cores Primárias do App (baseadas na paleta Huemint) -->
+    <color name="primaryColor">@color/huemint_teal_primary</color>     <!-- #6bb7ac -->
+    <color name="primaryDarkColor">#5A9A8F</color>     <!-- Tom mais escuro de huemint_teal_primary -->
+    <color name="onPrimaryColor">#FFFFFF</color>        <!-- Texto/ícones brancos sobre primaryColor -->
 
-    <!-- Cores Padrão (podem ser removidas ou ajustadas) -->
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
+    <!-- Cores de Acento -->
+    <color name="accentColor">@color/huemint_teal_light</color>      <!-- #6dc5be -->
+    <color name="onAccentColor">#FFFFFF</color>        <!-- Texto/ícones brancos sobre accentColor (ajuste se o accent for muito claro) -->
+
+    <!-- III. CORES PARA TEXTO, ÍCONES E COMPONENTES ESPECÍFICOS -->
+    <!-- Cores para elementos sobre o FUNDO GRADIENTE (ex: tela de login) -->
+    <color name="text_on_gradient_primary">#FFFFFF</color>
+    <color name="text_on_gradient_secondary">#B0FFFFFF</color>  <!-- Branco com ~70% alfa -->
+    <color name="icon_on_gradient">#FFFFFF</color>
+    <color name="login_field_background">#33FFFFFF</color>      <!-- Fundo de campo de login semi-transparente -->
+    <color name="login_button_background">#FFFFFF</color>       <!-- Fundo de botão de login branco -->
+    <color name="login_button_text">@color/huemint_teal_primary</color> <!-- Texto do botão de login -->
+
+    <!-- Cores de Fundo e Superfície para telas que NÃO usam o gradiente de fundo -->
+    <color name="app_background_color">@color/huemint_off_white</color> <!-- Fundo principal claro -->
+    <color name="app_surface_color">#FFFFFF</color>                <!-- Cards, diálogos brancos -->
+    <color name="surfaceVariantColor">#EAEAEA</color>            <!-- Variante de superfície (ex: divisores, fundos sutis) -->
+
+    <!-- Cores de Texto e Ícones para telas que NÃO usam o gradiente de fundo -->
+    <color name="app_text_primary_on_surface">#212121</color>     <!-- Texto principal escuro sobre fundos claros -->
+    <color name="app_text_secondary_on_surface">#757575</color>    <!-- Texto secundário cinza sobre fundos claros -->
+    <color name="app_icon_color_on_surface">#555555</color>       <!-- Ícones sobre fundos claros -->
+
+    <!-- Cores para Componentes de Formulário sobre FUNDO CLARO (ex: app_background_color) -->
+    <color name="field_background_light_theme">#FFFFFF</color>
+    <color name="field_stroke_light_theme">@color/huemint_teal_primary</color>
+    <color name="field_hint_light_theme">@color/app_text_secondary_on_surface</color>
+    <color name="button_primary_background_light_theme">@color/huemint_teal_primary</color>
+    <color name="button_primary_text_light_theme">@color/white</color>
+
+    <!-- IV. CORES FUNCIONAIS (Status, etc.) -->
+    <color name="status_pending">#FFAB00</color>   <!-- Âmbar -->
+    <color name="status_sent">#2962FF</color>       <!-- Azul -->
+    <color name="status_approved">#00C853</color>    <!-- Verde -->
+    <color name="status_rejected">#D50000</color>    <!-- Vermelho -->
+    <color name="status_completed">#757575</color>   <!-- Cinza -->
+    <color name="status_cancelled">#424242</color>   <!-- Cinza Escuro -->
+
+    <!-- V. CORES GENÉRICAS PADRÃO (Mantenha se usadas por algum estilo/tema base) -->
     <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="purple_200">#FFBB86FC</color> <!-- Se não usar, pode remover -->
+    <color name="purple_500">#FF6200EE</color> <!-- Se não usar, pode remover -->
+    <color name="purple_700">#FF3700B3</color> <!-- Se não usar, pode remover -->
+    <color name="teal_200">#FF03DAC5</color>   <!-- Se não usar, pode remover -->
+    <color name="teal_700">#FF018786</color>   <!-- Se não usar, pode remover -->
 
-    <color name="status_pending">#FFAB00</color> <!-- Amber -->
-    <color name="status_sent">#2962FF</color>    <!-- Blue -->
-    <color name="status_approved">#00C853</color> <!-- Green -->
-    <color name="status_rejected">#D50000</color> <!-- Red -->
-    <color name="status_completed">#757575</color><!-- Grey -->
-    <color name="status_cancelled">#424242</color><!-- Dark Grey -->
 </resources>

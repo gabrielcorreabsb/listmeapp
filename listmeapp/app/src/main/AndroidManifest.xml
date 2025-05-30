@@ -56,7 +56,6 @@ android:name=".auth.ui.MainActivity"
         android:exported="false" />
 
 
-
         <activity
             android:name=".auth.ui.BudgetListActivity"
             android:exported="false" />

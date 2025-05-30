@@ -46,6 +46,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.material:material:1.14.0-alpha01")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -53,7 +54,6 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     implementation(libs.maskara) // Assumindo que libs.maskara está definido no seu libs.versions.toml
 
     implementation("androidx.navigation:navigation-compose:2.7.5")
@@ -65,14 +65,14 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-    implementation(libs.material)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
-    implementation("com.jakewharton.threetenabp:threetenabp:1.4.6") // Verifique a última versão no GitHub
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
+    implementation(libs.androidx.material3.android) // Verifique a última versão no GitHub
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,4 +80,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }

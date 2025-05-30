@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".budget.ui.CreateBudgetActivity"> <!-- Pacote da sua CreateBudgetActivity -->
+    tools:context=".auth.ui.CreateBudgetActivity"> <!-- Pacote da sua CreateBudgetActivity -->
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -156,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Salvar Orçamento"
-                style="@style/Widget.ListMeApp.Button"
+                style="@style/Widget.ListMeApp.Button.Default"
                 android:paddingVertical="12dp"/>
 
             <ProgressBar
