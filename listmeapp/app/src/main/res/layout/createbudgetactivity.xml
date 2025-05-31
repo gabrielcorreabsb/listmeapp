@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".budget.ui.CreateBudgetActivity"> <!-- Crie este pacote e Activity -->
+    tools:context=".auth.ui.CreateBudgetActivity"> <!-- Crie este pacote e Activity -->
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -61,7 +61,6 @@
                     android:id="@+id/btnSelectClient"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:text="Selecionar"
                     android:layout_marginStart="8dp"/>
             </LinearLayout>
@@ -84,7 +83,6 @@
 
             <Button
                 android:id="@+id/btnAddProductToBudget"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Adicionar Produto"

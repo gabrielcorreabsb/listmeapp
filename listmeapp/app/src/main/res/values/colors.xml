@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
+
     <!-- I. CORES DA PALETA HUEMINT (Base para o App) -->
     <color name="huemint_off_white">#f7fdf6</color>    <!-- Usado para app_background_color -->
     <color name="huemint_teal_primary">#6bb7ac</color> <!-- Usado para primaryColor, login_button_text -->
@@ -62,5 +64,6 @@
     <color name="purple_700">#FF3700B3</color> <!-- Se não usar, pode remover -->
     <color name="teal_200">#FF03DAC5</color>   <!-- Se não usar, pode remover -->
     <color name="teal_700">#FF018786</color>   <!-- Se não usar, pode remover -->
+
 
 </resources>

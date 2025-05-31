@@ -93,15 +93,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Status:"/>
+
             <TextView
                 android:id="@+id/tvDetailBudgetStatus"
                 style="@style/DetailValue"
                 android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            tools:text="PENDENTE"
-            android:textStyle="bold"/>
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp"
+                android:textStyle="bold"
+                tools:text="PENDENTE" />
 
             <TextView
                 style="@style/DetailLabel"
@@ -171,7 +172,6 @@
 
                 <Button
                     android:id="@+id/btnMarkAsPaid"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Marcar como Concluído/Pago"
@@ -180,7 +180,6 @@
 
                 <Button
                     android:id="@+id/btnMarkAsSent"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Marcar como Enviado"
@@ -189,7 +188,6 @@
 
                 <Button
                     android:id="@+id/btnCancelBudget"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/holo_orange_dark"
@@ -208,7 +206,6 @@
 
                 <Button
                     android:id="@+id/btnEditBudget"
-                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

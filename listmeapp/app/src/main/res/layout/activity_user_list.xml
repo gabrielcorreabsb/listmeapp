@@ -68,4 +68,5 @@
         app:tint="@color/onPrimaryColor"
         app:backgroundTint="?attr/colorPrimary"
         android:contentDescription="Adicionar Usuário"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

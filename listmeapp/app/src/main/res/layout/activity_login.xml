@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:hint="Usuário ou Email"
-        app:startIconDrawable="@drawable/ic_person_outline"
+        app:startIconDrawable="@drawable/user"
         app:endIconMode="clear_text"
         app:layout_constraintTop_toBottomOf="@+id/tvLoginTitle"
         app:layout_constraintStart_toStartOf="parent"

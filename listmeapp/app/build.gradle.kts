@@ -46,7 +46,7 @@ android {
 }
 
 dependencies {
-    implementation("com.google.android.material:material:1.14.0-alpha01")
+    implementation("com.google.android.material:material:1.12.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -72,7 +72,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.6")
-    implementation(libs.androidx.material3.android) // Verifique a última versão no GitHub
+    implementation(libs.androidx.material3.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

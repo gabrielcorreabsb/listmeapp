@@ -1,104 +1,205 @@
-package com.example.listmeapp.auth.ui
+package com.example.listmeapp.auth.ui // Ou o pacote onde sua MainActivity está
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem // Essencial para onNavigationItemSelected
 import android.view.View
-import android.widget.ImageButton // Certifique-se que está importado
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.widget.Toolbar // Use androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.listmeapp.R
-// Importe UserListActivity do pacote correto onde você a criou
-import com.example.listmeapp.auth.ui.UserListActivity // Supondo que UserListActivity está em admin.ui
 import com.example.listmeapp.data.api.RetrofitClient
-import com.example.listmeapp.auth.ui.ProductListActivity
-import com.example.listmeapp.auth.ui.ClientListActivity
+import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var ibLogout: ImageButton
-    private lateinit var ibUser: ImageButton // Para gerenciar usuários (admin)
-    private lateinit var ibManageProducts: ImageButton // Para gerenciar produtos (admin/vendedor)
-    private lateinit var ibManagerClient: ImageButton // Para gerenciar clientes (admin/vendedor)
-    private lateinit var ibOrcamento: ImageButton // Para os orcamentos (admin/vendedor)
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
+    private lateinit var navController: NavController
+    private lateinit var toolbar: Toolbar
 
+    private var userCargo: String? = null
+    private var isAdmin: Boolean = false
+    private var authToken: String? = null
+    private var userName: String? = null
+    private var userEmail: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        toolbar = findViewById(R.id.main_toolbar)
+        setSupportActionBar(toolbar)
+
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+
+        // Inicializar o NavController de forma segura
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment_content_main) as? NavHostFragment
+        if (navHostFragment == null) {
+            Log.e("MainActivity", "NavHostFragment não encontrado com ID R.id.nav_host_fragment_content_main")
+            Toast.makeText(this, "Erro: NavHostFragment não encontrado.", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
+        navController = navHostFragment.navController
+
+        // Configurar AppBarConfiguration
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.navigation_home), drawerLayout
+        )
+
+        // Configurar ActionBar com NavController
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // Conectar NavigationView com NavController
+        navigationView.setupWithNavController(navController)
+
+        // Definir listener para itens do menu
+        navigationView.setNavigationItemSelectedListener(this)
+
+        loadUserData()
+
+        if (authToken == null) {
+            Toast.makeText(this, "Sessão inválida. Por favor, faça login.", Toast.LENGTH_LONG).show()
+            redirectToLogin()
+            return
         }
 
-        // Inicialização dos ImageButtons
-        ibLogout = findViewById(R.id.ibLogout)
-        ibUser = findViewById(R.id.ibUser) // Assumindo que R.id.ibUser é para gerenciar usuários
-        ibManageProducts = findViewById(R.id.ibProduct) // Assumindo R.id.ibManageProducts para produtos
-        ibManagerClient = findViewById(R.id.ibClient)
-        ibOrcamento = findViewById(R.id.ibOrcamento)
+        setupNavHeader()
+        setupMenuVisibility()
+    }
 
-
-
-        // Configurar OnClickListener para Logout
-        ibLogout.setOnClickListener {
-            performLogout()
-        }
-
-        // Obter o cargo do usuário
+    private fun loadUserData() {
         val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
-        val userCargo = sharedPreferences.getString("USER_CARGO", null)
+        authToken = sharedPreferences.getString("AUTH_TOKEN", null)
+        userName = sharedPreferences.getString("USER_NAME", "Usuário ListMe")
+        userEmail = sharedPreferences.getString("USER_EMAIL", "email@listme.app")
+        userCargo = sharedPreferences.getString("USER_CARGO", null)
+        isAdmin = userCargo == "ADMIN"
+    }
 
-        // Configurar botão de Gerenciar Usuários (Admin)
-        if (userCargo == "ADMIN") {
-            ibUser.visibility = View.VISIBLE
-            ibUser.setOnClickListener {
-                val intent = Intent(this, UserListActivity::class.java)
-                startActivity(intent)
+    private fun setupNavHeader() {
+        val headerView: View = navigationView.getHeaderView(0)
+        val tvNavUserName: TextView = headerView.findViewById(R.id.tvNavHeaderUserName)
+        val tvNavUserEmail: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
+        val ivNavLogo: ImageView = headerView.findViewById(R.id.ivNavHeaderLogo) // Se tiver
+
+        tvNavUserName.text = userName
+        tvNavUserEmail.text = userEmail
+        ivNavLogo.setImageResource(R.drawable.ic_logo_listm) // Exemplo
+    }
+
+    private fun setupMenuVisibility() {
+        val menu = navigationView.menu
+        val adminUsersMenuItem = menu.findItem(R.id.nav_users_admin)
+        val clientsMenuItem = menu.findItem(R.id.nav_clients)
+        val productsMenuItem = menu.findItem(R.id.nav_products)
+        val budgetsMenuItem = menu.findItem(R.id.nav_budgets)
+
+        adminUsersMenuItem?.isVisible = isAdmin
+
+        val canManageClientProductBudget = isAdmin || userCargo == "VENDEDOR"
+        clientsMenuItem?.isVisible = canManageClientProductBudget
+        productsMenuItem?.isVisible = canManageClientProductBudget
+        budgetsMenuItem?.isVisible = canManageClientProductBudget
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        var handled = false
+        when (item.itemId) {
+            R.id.nav_home -> {
+                // Se este item está no appBarConfiguration e setupWithNavController foi usado,
+                // o NavController deve lidar com a navegação para o fragment.
+                // Se precisar forçar ou tiver lógica extra:
+                // navController.navigate(R.id.navigation_home)
+                // handled = true // O NavController geralmente retorna true se navegou.
             }
-        } else {
-            ibUser.visibility = View.GONE
+            R.id.nav_clients -> {
+                startActivity(Intent(this, ClientListActivity::class.java))
+                handled = true
+            }
+            R.id.nav_products -> {
+                startActivity(Intent(this, ProductListActivity::class.java))
+                handled = true
+            }
+            R.id.nav_budgets -> {
+                startActivity(Intent(this, BudgetListActivity::class.java))
+                handled = true
+            }
+            R.id.nav_users_admin -> {
+                if (isAdmin) {
+                    startActivity(Intent(this, UserListActivity::class.java))
+                    handled = true
+                } else {
+                    Toast.makeText(this, "Acesso restrito.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            R.id.nav_settings -> {
+                Toast.makeText(this, "Configurações (A implementar)", Toast.LENGTH_SHORT).show()
+                handled = true
+            }
+            R.id.nav_logout -> {
+                performLogout()
+                handled = true // O logout já lida com o finish/redirect
+            }
+            else -> {
+                // Se não foi um dos seus itens customizados, deixe o NavController tentar (se houver correspondência de ID)
+                // Esta parte é mais para quando setupWithNavController não faz tudo sozinho.
+                // Com setupWithNavController, a navegação para fragments com IDs correspondentes é automática.
+                // handled = NavigationUI.onNavDestinationSelected(item, navController)
+            }
         }
 
-        // Configurar botão de Gerenciar Produtos, Clientes e Orçamentos (Admin ou Vendedor)
-        if (userCargo == "ADMIN" || userCargo == "VENDEDOR") {
-            ibManageProducts.visibility = View.VISIBLE
-            ibManagerClient.visibility = View.VISIBLE
-            ibManageProducts.setOnClickListener {
-                val intent = Intent(this, ProductListActivity::class.java)
-                startActivity(intent)
-            }
-            ibManagerClient.setOnClickListener {
-                val intent = Intent(this, ClientListActivity::class.java)
-                startActivity(intent)
-            }
-                ibOrcamento.setOnClickListener {
-                    val intent = Intent(this, BudgetListActivity::class.java)
-                    startActivity(intent)
-                }
-            } else {
-                ibManageProducts.visibility = View.GONE
-                ibManagerClient.visibility = View.GONE
-            }
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return handled // Retorne true se você tratou o clique.
+        // Se o item do menu corresponde a um destino no NavController e
+        // setupWithNavController está ativo, ele já deve ter navegado, e
+        // retornar true aqui está correto.
+        // Se você não tratou, pode retornar o resultado de onNavDestinationSelected
+        // ou false para permitir que outros listeners (se houver) processem.
+    }
 
-    } // FIM DO MÉTODO ONCREATE
+    override fun onSupportNavigateUp(): Boolean {
+        // Lida com o ícone de hamburger/seta "up" na Toolbar
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
 
-    // A função performLogout() e redirectToLogin() permanecem as mesmas
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            // Deixa o NavController lidar com o botão voltar para fragments.
+            // Se não houver mais nada na backstack do NavController, super.onBackPressed() fecha a Activity.
+            if (!navController.popBackStack()) {
+                super.onBackPressed()
+            }
+        }
+    }
+
     private fun performLogout() {
         Log.d("MainActivity", "Logout button clicked")
         val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("AUTH_TOKEN", null)
+        val tokenToClear = sharedPreferences.getString("AUTH_TOKEN", null)
 
         with(sharedPreferences.edit()) {
             clear()
@@ -106,21 +207,14 @@ class MainActivity : AppCompatActivity() {
         }
         Log.i("Auth", "SharedPreferences limpas.")
 
-        if (token != null) {
+        if (tokenToClear != null) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val bearerToken = "Bearer $token"
-                    val response = RetrofitClient.instance.logout(bearerToken) // Usando 'instance' para AuthApi
-                    withContext(Dispatchers.Main) {
-                        if (response.isSuccessful) {
-                            Log.d("LogoutAPI", "Logout no backend bem-sucedido.")
-                        } else {
-                            Log.e("LogoutAPI", "Falha no logout do backend: ${response.code()}")
-                        }
-                        redirectToLogin()
-                    }
+                    val bearerToken = "Bearer $tokenToClear"
+                    RetrofitClient.instance.logout(bearerToken) // Assumindo que 'instance' é sua AuthApi
                 } catch (e: Exception) {
-                    Log.e("LogoutAPI", "Exceção ao chamar API de logout: ${e.message}", e)
+                    Log.e("LogoutAPI", "Exceção ao chamar API de logout: ${e.message}")
+                } finally {
                     withContext(Dispatchers.Main) {
                         redirectToLogin()
                     }
@@ -132,7 +226,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun redirectToLogin() {
-        val intent = Intent(this@MainActivity, LoginActivity::class.java) // Importe LoginActivity se necessário
+        val intent = Intent(this, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
