@@ -53,7 +53,7 @@ O ListMe nasceu da necessidade de otimizar a gestão comercial, especialmente pa
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
-*   **Java 17+** (ou a versão que você está usando, ex: Java 21)
+*   **Java 21+**
 *   **Spring Boot 3.x**
 *   **Spring Security & JWT:** Para autenticação e autorização.
 *   **Spring Data JPA (Hibernate):** Para persistência de dados.
@@ -75,7 +75,7 @@ O ListMe nasceu da necessidade de otimizar a gestão comercial, especialmente pa
 *   **Bibliotecas de Máscara (ex: Maskara):** Para formatação de campos de entrada.
 *   **ThreeTenABP:** Para retrocompatibilidade da API `java.time`.
 
-### Infraestrutura & Deploy (Exemplo)
+### Infraestrutura & Deploy
 *   **Nginx:** Como proxy reverso.
 *   **Let's Encrypt (Certbot):** Para certificados SSL/TLS.
 *   Servidor VPS (Ubuntu).
@@ -83,7 +83,7 @@ O ListMe nasceu da necessidade de otimizar a gestão comercial, especialmente pa
 ## 🚀 Como Começar (Para Desenvolvedores)
 
 ### Pré-requisitos
-*   JDK 17+ (ou a versão especificada no `pom.xml`)
+*   JDK 21+
 *   Maven 3.6+
 *   PostgreSQL (instalado localmente ou via Docker)
 *   Docker e Docker Compose (para rodar o ambiente completo facilmente)
