@@ -1,9 +1,8 @@
-# ListMe - Gestão Inteligente de Pedidos 🛍️
-
 <p align="center">
-  <!-- ADICIONE UM LOGO OU BANNER DO APP AQUI SE TIVER -->
-  <!-- Exemplo: <img src="link_para_seu_logo.png" alt="ListMe Logo" width="200"/> -->
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/logo.png?raw=true" alt="ListMe Logo" width="200"/>
 </p>
+
+# ListMe - Gestão Inteligente de Pedidos 🛍️
 
 **ListMe** é um aplicativo mobile projetado para modernizar e automatizar o processo de anotação e gerenciamento de pedidos, trazendo eficiência e organização para o seu negócio.
 
@@ -113,16 +112,20 @@ O ListMe nasceu da necessidade de otimizar a gestão comercial, especialmente pa
 
 3.  Compile e execute o aplicativo no emulador ou dispositivo.
 
-## 📸 Screenshots (Opcional, mas Altamente Recomendado)
+## 📸 Screenshots
 
-<!-- Adicione screenshots do seu aplicativo aqui quando tiver uma UI mais estável.
-     Isso ajuda muito a mostrar o progresso e a aparência do app.
-     Exemplo:
-     <p align="center">
-       <img src="link_screenshot_login.png" alt="Tela de Login" width="250"/>   
-       <img src="link_screenshot_main.png" alt="Tela Principal" width="250"/>
-     </p>
--->
+<p align="center">
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_1.png?raw=true" width="250"/>
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_2.png?raw=true" width="250"/>
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_3.png?raw=true" width="250"/>
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_4.png?raw=true" width="250"/>
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_9.png?raw=true" width="250"/>
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_5.png?raw=true" width="250"/>
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_10.png?raw=truee" width="250"/>
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_7.png?raw=true" width="250"/>
+<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_8.png?raw=true" width="250"/>
+
+</p>
 
 ## 🤝 Contribuições
 
