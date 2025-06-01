@@ -16,6 +16,7 @@ import com.example.listmeapp.R // << IMPORTANTE: R do seu projeto
 import com.example.listmeapp.data.model.LoginRequest
 import com.example.listmeapp.data.model.MessageResponse
 import com.example.listmeapp.data.api.RetrofitClient
+import com.google.android.material.textview.MaterialTextView
 
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -29,10 +30,12 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etPassword: TextInputEditText
     private lateinit var btnLogin: Button
     private lateinit var progressBar: ProgressBar
+    private lateinit var tvForgotPassword: MaterialTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login) // Usa o R.layout do seu projeto
+
 
         // Inicializar SharedPreferences para verificar se já existe token
         val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE) // Nome do arquivo de prefs pode ser app-specific
@@ -49,10 +52,12 @@ class LoginActivity : AppCompatActivity() {
         etPassword = findViewById(R.id.etPassword) // Usa o R.id do seu projeto
         btnLogin = findViewById(R.id.btnLogin) // Usa o R.id do seu projeto
         progressBar = findViewById(R.id.progressBar) // Usa o R.id do seu projeto
+        tvForgotPassword = findViewById(R.id.tvForgotPassword)
 
-        // Para teste rápido (opcional, remova depois):
-        // etLogin.setText("admin")
-        // etPassword.setText("G0212snake##")
+        tvForgotPassword.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
 
         btnLogin.setOnClickListener {
             val loginInput = etLogin.text.toString().trim()
@@ -98,11 +103,10 @@ class LoginActivity : AppCompatActivity() {
                         val loginResponseData = response.body()
                         if (loginResponseData != null) {
                             Toast.makeText(this@LoginActivity, "Login bem-sucedido!", Toast.LENGTH_LONG).show()
-                            Log.d("LOGIN_SUCCESS", "Token: ${loginResponseData.token}")
-                            Log.d("LOGIN_SUCCESS", "User: ${loginResponseData.user}")
+
 
                             // Salvar o token E O CARGO
-                            saveAuthInfo(loginResponseData.token, loginResponseData.user.cargo) // Passa o cargo
+                            saveAuthInfo(loginResponseData.token, loginResponseData.user.cargo, loginResponseData.user.nome, loginResponseData.user.email)
 
                             navigateToMainScreen()
 
@@ -160,11 +164,13 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun saveAuthInfo(token: String, cargo: String) { // Recebe o cargo como String
+    private fun saveAuthInfo(token: String, cargo: String, nome: String, email: String) { // Recebe o cargo como String
         val sharedPreferences = getSharedPreferences("ListMeAppPrefs", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putString("AUTH_TOKEN", token)
-            putString("USER_CARGO", cargo) // Salva o cargo como String
+            putString("USER_CARGO", cargo)
+            putString("USER_NAME", nome)     // SALVANDO O NOME
+            putString("USER_EMAIL", email)   // SALVANDO O EMAIL
             apply()
         }
         Log.i("Auth", "Token e Cargo salvos nas SharedPreferences.")

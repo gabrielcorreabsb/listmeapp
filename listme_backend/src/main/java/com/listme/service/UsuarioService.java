@@ -27,6 +27,42 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
+    public Optional<Usuario> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    public void createPasswordResetTokenForUser(Usuario user, String token, LocalDateTime expiryDate) {
+        user.setResetPasswordToken(token);
+        user.setResetPasswordTokenExpiry(expiryDate);
+        repository.save(user);
+    }
+
+    public String validatePasswordResetToken(String token) {
+        final Usuario user = repository.findByResetPasswordToken(token).orElse(null);
+        if (user == null) {
+            return "Token de redefinição inválido.";
+        }
+        if (user.getResetPasswordTokenExpiry().isBefore(LocalDateTime.now())) {
+            return "Token de redefinição expirado.";
+        }
+        return null; // Token válido
+    }
+
+    public Optional<Usuario> getUserByPasswordResetToken(String token) {
+        return repository.findByResetPasswordToken(token);
+    }
+
+    public void changeUserPassword(Usuario user, String password) {
+        // Adicione validações de pattern e size aqui se não estiverem no DTO/entidade para este fluxo
+        // ou se você quiser garantir no serviço.
+        // Ex: if (password.length() < 6) throw new IllegalArgumentException("Senha muito curta");
+        user.setSenha(passwordEncoder.encode(password));
+        user.setResetPasswordToken(null); // Invalida o token
+        user.setResetPasswordTokenExpiry(null);
+        repository.save(user);
+    }
+
     public List<Usuario> listarUsuario() {
         log.info("Listando todos os usuários");
         return repository.findAll();

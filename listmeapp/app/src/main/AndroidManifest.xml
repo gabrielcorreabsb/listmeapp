@@ -63,5 +63,9 @@ android:name=".auth.ui.MainActivity"
             android:name=".auth.ui.BudgetDetailActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".auth.ui.ForgotPasswordActivity"
+            android:exported="false" />
+
     </application>
     </manifest>

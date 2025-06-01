@@ -1,26 +1,26 @@
-package com.example.listmeapp.auth.ui // Ou o pacote onde sua MainActivity está
+package com.example.listmeapp.auth.ui
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem // Essencial para onNavigationItemSelected
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar // Use androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.NavHostFragment // Importe NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.listmeapp.R
+
 import com.example.listmeapp.data.api.RetrofitClient
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
@@ -52,29 +52,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
 
-        // Inicializar o NavController de forma segura
+        // Maneira correta de obter o NavController de um NavHostFragment
         val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment_content_main) as? NavHostFragment
-        if (navHostFragment == null) {
-            Log.e("MainActivity", "NavHostFragment não encontrado com ID R.id.nav_host_fragment_content_main")
-            Toast.makeText(this, "Erro: NavHostFragment não encontrado.", Toast.LENGTH_LONG).show()
-            finish()
-            return
-        }
+            .findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Configurar AppBarConfiguration
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.navigation_home), drawerLayout
+            setOf(
+                R.id.navigation_home // ID do seu fragmento inicial no nav_graph
+                // Adicione outros IDs de fragmentos de nível superior aqui, se houver
+            ), drawerLayout
         )
 
-        // Configurar ActionBar com NavController
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        // Conectar NavigationView com NavController
         navigationView.setupWithNavController(navController)
-
-        // Definir listener para itens do menu
         navigationView.setNavigationItemSelectedListener(this)
 
         loadUserData()
@@ -102,11 +93,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val headerView: View = navigationView.getHeaderView(0)
         val tvNavUserName: TextView = headerView.findViewById(R.id.tvNavHeaderUserName)
         val tvNavUserEmail: TextView = headerView.findViewById(R.id.tvNavHeaderUserEmail)
-        val ivNavLogo: ImageView = headerView.findViewById(R.id.ivNavHeaderLogo) // Se tiver
+        val ivNavLogo: ImageView = headerView.findViewById(R.id.ivNavHeaderLogo)
 
         tvNavUserName.text = userName
         tvNavUserEmail.text = userEmail
-        ivNavLogo.setImageResource(R.drawable.ic_logo_listm) // Exemplo
+        ivNavLogo.setImageResource(R.drawable.ic_logo_listm) // Use seu logo
     }
 
     private fun setupMenuVisibility() {
@@ -125,62 +116,61 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        var handled = false
+        // O NavController (via setupWithNavController) tentará navegar primeiro
+        // se o ID do item de menu corresponder a um destino no gráfico de navegação.
+        // Se não, ou se você quiser comportamento customizado (como iniciar uma Activity),
+        // trate aqui e retorne true.
+
         when (item.itemId) {
             R.id.nav_home -> {
-                // Se este item está no appBarConfiguration e setupWithNavController foi usado,
-                // o NavController deve lidar com a navegação para o fragment.
-                // Se precisar forçar ou tiver lógica extra:
-                // navController.navigate(R.id.navigation_home)
-                // handled = true // O NavController geralmente retorna true se navegou.
+                navController.navigate(R.id.navigation_home) // Navega para o fragmento Home
+                drawerLayout.closeDrawer(GravityCompat.START)
+                return true
             }
             R.id.nav_clients -> {
                 startActivity(Intent(this, ClientListActivity::class.java))
-                handled = true
+                drawerLayout.closeDrawer(GravityCompat.START)
+                return true
             }
             R.id.nav_products -> {
                 startActivity(Intent(this, ProductListActivity::class.java))
-                handled = true
+                drawerLayout.closeDrawer(GravityCompat.START)
+                return true
             }
             R.id.nav_budgets -> {
                 startActivity(Intent(this, BudgetListActivity::class.java))
-                handled = true
+                drawerLayout.closeDrawer(GravityCompat.START)
+                return true
             }
             R.id.nav_users_admin -> {
                 if (isAdmin) {
                     startActivity(Intent(this, UserListActivity::class.java))
-                    handled = true
                 } else {
                     Toast.makeText(this, "Acesso restrito.", Toast.LENGTH_SHORT).show()
                 }
+                drawerLayout.closeDrawer(GravityCompat.START)
+                return true
             }
             R.id.nav_settings -> {
                 Toast.makeText(this, "Configurações (A implementar)", Toast.LENGTH_SHORT).show()
-                handled = true
+                // TODO: Navegar para um Fragment/Activity de Configurações
+                drawerLayout.closeDrawer(GravityCompat.START)
+                return true
             }
             R.id.nav_logout -> {
                 performLogout()
-                handled = true // O logout já lida com o finish/redirect
-            }
-            else -> {
-                // Se não foi um dos seus itens customizados, deixe o NavController tentar (se houver correspondência de ID)
-                // Esta parte é mais para quando setupWithNavController não faz tudo sozinho.
-                // Com setupWithNavController, a navegação para fragments com IDs correspondentes é automática.
-                // handled = NavigationUI.onNavDestinationSelected(item, navController)
+                // Não precisa fechar a gaveta aqui, pois a activity será finalizada
+                return true
             }
         }
-
+        // Se nenhum item foi tratado acima, e setupWithNavController não tratou,
+        // o comportamento padrão é não fazer nada ou deixar o sistema tratar.
+        // Fechar a gaveta aqui também é uma boa prática se o item não foi tratado.
         drawerLayout.closeDrawer(GravityCompat.START)
-        return handled // Retorne true se você tratou o clique.
-        // Se o item do menu corresponde a um destino no NavController e
-        // setupWithNavController está ativo, ele já deve ter navegado, e
-        // retornar true aqui está correto.
-        // Se você não tratou, pode retornar o resultado de onNavDestinationSelected
-        // ou false para permitir que outros listeners (se houver) processem.
+        return false // Indica que o item não foi tratado por este listener (deixa o NavController tentar)
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        // Lida com o ícone de hamburger/seta "up" na Toolbar
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
@@ -188,10 +178,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
-            // Deixa o NavController lidar com o botão voltar para fragments.
-            // Se não houver mais nada na backstack do NavController, super.onBackPressed() fecha a Activity.
-            if (!navController.popBackStack()) {
-                super.onBackPressed()
+            if (!navController.popBackStack()) { // Tenta voltar na pilha do NavController
+                super.onBackPressed() // Se não houver nada para voltar no NavController, fecha a Activity
             }
         }
     }
@@ -211,7 +199,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val bearerToken = "Bearer $tokenToClear"
-                    RetrofitClient.instance.logout(bearerToken) // Assumindo que 'instance' é sua AuthApi
+                    RetrofitClient.instance.logout(bearerToken)
                 } catch (e: Exception) {
                     Log.e("LogoutAPI", "Exceção ao chamar API de logout: ${e.message}")
                 } finally {

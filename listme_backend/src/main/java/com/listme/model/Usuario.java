@@ -82,6 +82,12 @@ public class Usuario implements UserDetails {
     @Builder.Default
     private Set<String> roles = new HashSet<>();
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
+    @Column(name = "reset_password_token_expiry")
+    private LocalDateTime resetPasswordTokenExpiry;
+
     @PrePersist
     @PreUpdate
     protected void onPersistAndUpdate() {
@@ -195,7 +201,8 @@ public class Usuario implements UserDetails {
     @Builder
     public Usuario(Integer idUsuario, String login, String nome, String email, String senha,
                    Cargo cargo, LocalDateTime dataCriacao, LocalDateTime ultimoAcesso,
-                   Boolean ativo, Integer tentativasLogin, Set<String> roles) {
+                   Boolean ativo, Integer tentativasLogin, Set<String> roles,
+                   String resetPasswordToken, LocalDateTime resetPasswordTokenExpiry) {
         this.idUsuario = idUsuario;
         this.login = login;
         this.nome = nome;
@@ -207,6 +214,8 @@ public class Usuario implements UserDetails {
         this.ativo = ativo != null ? ativo : true;
         this.tentativasLogin = tentativasLogin != null ? tentativasLogin : 0;
         this.roles = roles != null ? roles : new HashSet<>();
+        this.resetPasswordToken = resetPasswordToken;
+        this.resetPasswordTokenExpiry = resetPasswordTokenExpiry;
         if (this.cargo != null) {
             this.roles.add("ROLE_" + this.cargo.name());
         }
