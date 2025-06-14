@@ -130,70 +130,110 @@ header {
 }
 
 /* Hero Section */
+/* Seção Hero - Contêiner Principal */
 #hero {
     background: var(--secondary-color);
-    position: relative;
+    /* Garante que o conteúdo interno possa ser alinhado */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* O conteúdo dentro da seção */
 #hero .section-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-xl);
-    align-items: center;
+    /*
+      Grid de 2 colunas:
+      - minmax(0, 1fr) é uma técnica robusta que evita problemas de overflow de conteúdo.
+      - Garante que as colunas dividam o espaço igualmente.
+    */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--spacing-lg); /* Espaço entre texto e imagem */
+    align-items: center; /* Alinha verticalmente o texto e a imagem */
+    width: 100%;
+    max-width: 1200px; /* Limita a largura máxima para legibilidade */
+    padding: 0 var(--spacing-md); /* Espaçamento lateral */
+    margin: 0 auto; /* Garante que o grid fique centralizado na seção */
 }
 
+/* Lado do Texto */
 .hero-text {
-    position: relative;
-    z-index: 1;
+    /* Centraliza o conteúdo de texto na sua coluna do grid */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: var(--spacing-md); /* Adiciona um respiro à direita do texto */
 }
 
 .hero-text h1 {
     font-family: var(--font-display);
-    font-size: var(--text-5xl);
+    /* Use clamp() para um tamanho de fonte fluido e responsivo */
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
     color: var(--dark-blue);
     margin-bottom: var(--spacing-md);
     line-height: 1.2;
 }
 
 .hero-text p {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
     color: var(--text-light);
     margin-bottom: var(--spacing-lg);
     line-height: 1.6;
+    max-width: 500px; /* Evita que as linhas de texto fiquem muito longas */
 }
 
-/* Slideshow */
+/* Lado da Imagem (Slideshow) */
 .hero-image {
-    position: relative;
-    z-index: 1;
-    background: rgba(255, 255, 255, 0.1);
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1500px; /* Necessário para o efeito 3D no slideshow */
 }
 
 .slideshow {
     position: relative;
-    max-width: 600px;
-    margin: 0 auto;
-    border-radius: var(--border-radius-lg);
-    overflow: hidden;
-    box-shadow: var(--card-shadow);
-}
 
-.slide {
-    display: none;
+    /* <<< CONTROLE O TAMANHO AQUI >>> */
+    /* Este é o único valor que você precisa mudar para deixar o slide maior ou menor. */
+    max-width: 250px;
+
     width: 100%;
+
+    /* <<< A MÁGICA ACONTECE AQUI >>> */
+    /* Definimos a proporção exata das suas imagens (304 / 675) */
+    aspect-ratio: 304 / 675;
+
+    margin: 0 auto;
+    overflow: hidden;
+
+    /* Estilo da moldura do celular (mantido) */
+    background-color: #1c1c1e;
+    border-radius: 40px; /* Aumente se o celular parecer 'quadrado' demais */
+    border: 8px solid #111;
+    padding: 4px;
+    box-shadow: 0 20px 40px rgba(44, 76, 86, 0.3);
+    transform: rotateY(-10deg) rotateX(3deg);
+    transition: var(--transition-fast);
 }
 
-.slide.active {
-    display: block;
+.slideshow:hover {
+    transform: rotateY(0) rotateX(0) scale(1.05);
+    box-shadow: 0 25px 50px rgba(44, 76, 86, 0.4);
 }
 
 .slide img {
     width: 100%;
-    height: auto;
+    height: 100%;
+
+    /*
+      Agora que a proporção do contêiner e da imagem são idênticas,
+      a imagem vai se encaixar perfeitamente, sem esticar ou cortar.
+    */
+    object-fit: cover;
     display: block;
-    border-radius: var(--border-radius-lg);
+
+    /* Arredonda os cantos da "tela" interna */
+    border-radius: 32px;
 }
 
 /* Controles do Slideshow */

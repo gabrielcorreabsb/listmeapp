@@ -4,7 +4,6 @@
     <style name="Theme.ListMeApp" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorOnPrimary">@color/onPrimaryColor</item>
-        <item name="colorPrimaryContainer">@color/huemint_teal_light</item>
         <item name="colorOnPrimaryContainer">@color/app_text_primary_on_surface</item>
         <item name="colorSecondary">@color/accentColor</item>
         <item name="colorOnSecondary">@color/white</item>

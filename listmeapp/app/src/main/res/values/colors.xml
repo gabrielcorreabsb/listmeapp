@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- I. CORES DA NOVA PALETA (Base para o App) -->
+    <color name="brand_teal_vibrant">#12909E</color>  <!-- Verde-azulado vibrante -->
+    <color name="brand_teal_medium">#0D6A74</color>   <!-- Verde-azulado médio-escuro -->
+    <color name="brand_teal_dark">#063338</color>      <!-- Verde-azulado muito escuro -->
 
+    <!-- II. CORES DERIVADAS OU COMPLEMENTARES À NOVA PALETA -->
+    <!-- Para o Gradiente Principal (usado na tela de login) -->
+    <color name="gradient_start_color_new">@color/brand_teal_medium</color> <!-- Início do gradiente (meio) -->
+    <color name="gradient_end_color_new">@color/brand_teal_dark</color>   <!-- Fim do gradiente (escuro) -->
 
-    <!-- I. CORES DA PALETA HUEMINT (Base para o App) -->
-    <color name="huemint_off_white">#f7fdf6</color>    <!-- Usado para app_background_color -->
-    <color name="huemint_teal_primary">#6bb7ac</color> <!-- Usado para primaryColor, login_button_text -->
-    <color name="huemint_teal_light">#6dc5be</color>   <!-- Usado para accentColor, gradient_start_color_new -->
-
-    <!-- II. CORES DERIVADAS OU COMPLEMENTARES À PALETA HUEMINT -->
-    <!-- Para o Gradiente Principal (se usado em alguma tela como Login) -->
-    <color name="gradient_start_color_new">@color/huemint_teal_light</color>
-    <color name="gradient_end_color_new">@color/huemint_teal_primary</color>
-
-    <!-- Cores Primárias do App (baseadas na paleta Huemint) -->
-    <color name="primaryColor">@color/huemint_teal_primary</color>     <!-- #6bb7ac -->
-    <color name="primaryDarkColor">#5A9A8F</color>     <!-- Tom mais escuro de huemint_teal_primary -->
-    <color name="onPrimaryColor">#FFFFFF</color>        <!-- Texto/ícones brancos sobre primaryColor -->
+    <!-- Cores Primárias do App (baseadas na nova paleta) -->
+    <color name="primaryColor">@color/brand_teal_medium</color>     <!-- #0D6A74 -->
+    <color name="primaryDarkColor">@color/brand_teal_dark</color>     <!-- #063338 -->
+    <color name="onPrimaryColor">#FFFFFF</color>                     <!-- Texto/ícones brancos sobre a cor primária -->
 
     <!-- Cores de Acento -->
-    <color name="accentColor">@color/huemint_teal_light</color>      <!-- #6dc5be -->
-    <color name="onAccentColor">#FFFFFF</color>        <!-- Texto/ícones brancos sobre accentColor (ajuste se o accent for muito claro) -->
+    <color name="accentColor">@color/brand_teal_vibrant</color>      <!-- #12909E -->
+    <color name="onAccentColor">#FFFFFF</color>                      <!-- Texto/ícones brancos sobre a cor de acento -->
 
     <!-- III. CORES PARA TEXTO, ÍCONES E COMPONENTES ESPECÍFICOS -->
     <!-- Cores para elementos sobre o FUNDO GRADIENTE (ex: tela de login) -->
@@ -29,23 +27,23 @@
     <color name="icon_on_gradient">#FFFFFF</color>
     <color name="login_field_background">#33FFFFFF</color>      <!-- Fundo de campo de login semi-transparente -->
     <color name="login_button_background">#FFFFFF</color>       <!-- Fundo de botão de login branco -->
-    <color name="login_button_text">@color/huemint_teal_primary</color> <!-- Texto do botão de login -->
+    <color name="login_button_text">@color/brand_teal_dark</color> <!-- Texto do botão de login (cor escura para contraste) -->
 
     <!-- Cores de Fundo e Superfície para telas que NÃO usam o gradiente de fundo -->
-    <color name="app_background_color">@color/huemint_off_white</color> <!-- Fundo principal claro -->
+    <color name="app_background_color">#F8F9FA</color>             <!-- Off-white como fundo principal -->
     <color name="app_surface_color">#FFFFFF</color>                <!-- Cards, diálogos brancos -->
-    <color name="surfaceVariantColor">#EAEAEA</color>            <!-- Variante de superfície (ex: divisores, fundos sutis) -->
+    <color name="surfaceVariantColor">#EAEAEA</color>            <!-- Variante de superfície -->
 
     <!-- Cores de Texto e Ícones para telas que NÃO usam o gradiente de fundo -->
-    <color name="app_text_primary_on_surface">#212121</color>     <!-- Texto principal escuro sobre fundos claros -->
-    <color name="app_text_secondary_on_surface">#757575</color>    <!-- Texto secundário cinza sobre fundos claros -->
-    <color name="app_icon_color_on_surface">#555555</color>       <!-- Ícones sobre fundos claros -->
+    <color name="app_text_primary_on_surface">#212529</color>     <!-- Texto principal escuro sobre fundos claros -->
+    <color name="app_text_secondary_on_surface">#6c757d</color>    <!-- Texto secundário cinza sobre fundos claros -->
+    <color name="app_icon_color_on_surface">#495057</color>       <!-- Ícones sobre fundos claros -->
 
-    <!-- Cores para Componentes de Formulário sobre FUNDO CLARO (ex: app_background_color) -->
+    <!-- Cores para Componentes de Formulário sobre FUNDO CLARO -->
     <color name="field_background_light_theme">#FFFFFF</color>
-    <color name="field_stroke_light_theme">@color/huemint_teal_primary</color>
+    <color name="field_stroke_light_theme">@color/brand_teal_medium</color>
     <color name="field_hint_light_theme">@color/app_text_secondary_on_surface</color>
-    <color name="button_primary_background_light_theme">@color/huemint_teal_primary</color>
+    <color name="button_primary_background_light_theme">@color/brand_teal_medium</color>
     <color name="button_primary_text_light_theme">@color/white</color>
 
     <!-- IV. CORES FUNCIONAIS (Status, etc.) -->
@@ -53,17 +51,18 @@
     <color name="status_sent">#2962FF</color>       <!-- Azul -->
     <color name="status_approved">#00C853</color>    <!-- Verde -->
     <color name="status_rejected">#D50000</color>    <!-- Vermelho -->
-    <color name="status_completed">#757575</color>   <!-- Cinza -->
-    <color name="status_cancelled">#424242</color>   <!-- Cinza Escuro -->
+    <color name="status_completed">#6c757d</color>   <!-- Cinza -->
+    <color name="status_cancelled">#495057</color>   <!-- Cinza Escuro -->
 
-    <!-- V. CORES GENÉRICAS PADRÃO (Mantenha se usadas por algum estilo/tema base) -->
-    <color name="white">#FFFFFFFF</color>
+    <!-- V. CORES GENÉRICAS PADRÃO -->
+    <color name="white">#FFFFFF</color>
     <color name="black">#FF000000</color>
-    <color name="purple_200">#FFBB86FC</color> <!-- Se não usar, pode remover -->
-    <color name="purple_500">#FF6200EE</color> <!-- Se não usar, pode remover -->
-    <color name="purple_700">#FF3700B3</color> <!-- Se não usar, pode remover -->
-    <color name="teal_200">#FF03DAC5</color>   <!-- Se não usar, pode remover -->
-    <color name="teal_700">#FF018786</color>   <!-- Se não usar, pode remover -->
-
+    <!-- As cores "purple_" e "teal_" do Material 2 podem ser removidas se você tem certeza
+         de que nenhum estilo ou tema base está referenciando-as. Se houver dúvida, é mais seguro manter. -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
 
 </resources>
