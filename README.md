@@ -115,17 +115,27 @@ O ListMe nasceu da necessidade de otimizar a gestão comercial, especialmente pa
 ## 📸 Screenshots
 
 <p align="center">
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_1.png?raw=true" width="250"/>
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_2.png?raw=true" width="250"/>
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_3.png?raw=true" width="250"/>
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_4.png?raw=true" width="250"/>
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_9.png?raw=true" width="250"/>
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_5.png?raw=true" width="250"/>
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_10.png?raw=truee" width="250"/>
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_7.png?raw=true" width="250"/>
-<img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/srcgit/screen_8.png?raw=true" width="250"/>
-
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s1.png?raw=true" alt="ListMe Tela 1" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s2.png?raw=true" alt="ListMe Tela 2" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s3.png?raw=true" alt="ListMe Tela 3" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s4.png?raw=true" alt="ListMe Tela 4" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s5.png?raw=true" alt="ListMe Tela 5" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s6.png?raw=true" alt="ListMe Tela 6" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s7.png?raw=true" alt="ListMe Tela 7" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s8.png?raw=true" alt="ListMe Tela 8" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s9.png?raw=true" alt="ListMe Tela 9" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s10.png?raw=true" alt="ListMe Tela 10" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s11.png?raw=true" alt="ListMe Tela 11" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s12.png?raw=true" alt="ListMe Tela 12" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s13.png?raw=true" alt="ListMe Tela 13" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s14.png?raw=true" alt="ListMe Tela 14" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s15.png?raw=true" alt="ListMe Tela 15" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s16.png?raw=true" alt="ListMe Tela 16" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s17.png?raw=true" alt="ListMe Tela 17" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s18.png?raw=true" alt="ListMe Tela 18" width="250"/>
+  <img src="https://github.com/gabrielcorreabsb/listmeapp/blob/main/listme_site/assets/imgs/s19.png?raw=true" alt="ListMe Tela 19" width="250"/>
 </p>
+
 
 ## 🤝 Contribuições
 
